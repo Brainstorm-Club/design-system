@@ -31,15 +31,7 @@
     --shadow-md:0 4px 16px rgba(0,0,0,.45);
     --shadow-pop:4px 4px 0 var(--rosso);
   }
-  @media (prefers-color-scheme: light) {
-    :root:not([data-theme]) {
-      --bg:var(--carta); --surface:#FBF8F2; --surface-2:#F3EEE4; --border:var(--n-200);
-      --text:var(--n-950); --muted:var(--n-600); --faint:var(--n-400);
-      --primary:var(--rosso-700); --primary-hover:var(--rosso-900); --focus:var(--rosso-700);
-      --ink:var(--n-950);
-      --shadow-md:0 6px 20px rgba(24,22,23,.14);
-    }
-  }
+  /* Default: sempre carbone (scuro). Il chiaro si attiva solo col toggle. */
   :root[data-theme="light"] {
     --bg:var(--carta); --surface:#FBF8F2; --surface-2:#F3EEE4; --border:var(--n-200);
     --text:var(--n-950); --muted:var(--n-600); --faint:var(--n-400);
@@ -773,8 +765,7 @@ setTheme('light')                        // 'dark' | 'light'</pre></div>
   }
   (function () {
     var root = document.documentElement, btn = document.getElementById('themeBtn');
-    function current(){ return root.getAttribute('data-theme') ||
-      (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
+    function current(){ return root.getAttribute('data-theme') || 'dark'; } // default scuro
     btn.addEventListener('click', function () {
       var next = current() === 'dark' ? 'light' : 'dark';
       root.setAttribute('data-theme', next);
