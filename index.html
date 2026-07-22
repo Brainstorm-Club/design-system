@@ -262,6 +262,40 @@
   .groundbox .gm { font-family:var(--font-display); text-transform:lowercase; font-size:var(--t-2xl); }
   .groundbox .gn { font-family:var(--font-mono); font-size:var(--t-xs); color:var(--n-300);
     text-transform:uppercase; letter-spacing:.14em; margin-top:var(--s2); }
+  /* ==================== SVILUPPO: snippet & componenti app ==================== */
+  .snip { position:relative; margin-top:var(--s3); }
+  .snip pre { margin:0; overflow-x:auto; white-space:pre; tab-size:2; font-family:var(--font-mono);
+    font-size:var(--t-sm); line-height:1.5; background:var(--carbone); color:var(--n-100);
+    border:1px solid var(--n-800); border-radius:var(--r-md); padding:var(--s4) var(--s4); }
+  .snip .copy { position:absolute; top:var(--s2); right:var(--s2); font-family:var(--font-mono);
+    font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--n-300);
+    background:var(--n-800); border:1px solid var(--n-700); border-radius:var(--r-sm);
+    padding:3px 8px; cursor:pointer; transition:color var(--dur-fast), border-color var(--dur-fast); }
+  .snip .copy:hover { color:#fff; border-color:var(--rosso); }
+  .snip .copy:focus-visible { outline:2px solid var(--rosso-400); outline-offset:2px; }
+  .d-field { display:flex; flex-direction:column; gap:var(--s2); max-width:300px; }
+  .d-field label { font-family:var(--font-mono); font-size:var(--t-sm); color:var(--muted); }
+  .d-select { appearance:none; font-family:var(--font-body); font-size:var(--t-base);
+    padding:var(--s2) var(--s6) var(--s2) var(--s3); color:var(--text); border:1px solid var(--border);
+    border-radius:var(--r-md); background:var(--surface-2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%238A8180' stroke-width='1.6'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E") no-repeat right var(--s3) center/12px; }
+  .d-switch { position:relative; display:inline-flex; align-items:center; gap:var(--s3); cursor:pointer; }
+  .d-switch input { position:absolute; width:1px; height:1px; opacity:0; }
+  .d-switch .tk { width:40px; height:22px; border-radius:999px; background:var(--n-700); transition:background var(--dur-fast); flex:none; }
+  .d-switch .tk::after { content:""; position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:#fff; transition:transform var(--dur-fast); }
+  .d-switch input:checked + .tk { background:var(--rosso-600); }
+  .d-switch input:checked + .tk::after { transform:translateX(18px); }
+  .d-stat { display:inline-flex; flex-direction:column; align-items:center; gap:2px; min-width:76px;
+    padding:var(--s3); background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); text-align:center; }
+  .d-stat .l2 { font-family:var(--font-mono); font-size:var(--t-xs); text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+  .d-stat .v { font-family:var(--font-display); font-size:var(--t-2xl); line-height:1; }
+  .d-stat .m { font-family:var(--font-mono); font-size:var(--t-sm); color:var(--rosso-400); }
+  .d-table { width:100%; border-collapse:collapse; font-size:var(--t-sm); }
+  .d-table th, .d-table td { text-align:left; padding:var(--s2) var(--s3); border-bottom:1px solid var(--border); }
+  .d-table th { font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; font-size:var(--t-xs); color:var(--muted); }
+  .d-tabs { display:flex; gap:var(--s1); border-bottom:1px solid var(--border); }
+  .d-tab { font-family:var(--font-mono); font-size:var(--t-sm); text-transform:lowercase; padding:var(--s2) var(--s3);
+    color:var(--muted); background:none; border:0; border-bottom:2px solid transparent; cursor:pointer; }
+  .d-tab.on { color:var(--text); border-bottom-color:var(--rosso); }
 </style>
 
 <div class="shell">
@@ -277,6 +311,7 @@
       <li><a href="#componenti"><span class="num">05</span>Componenti</a></li>
       <li><a href="#voce"><span class="num">06</span>Voce &amp; tono</a></li>
       <li><a href="#token"><span class="num">07</span>Token</a></li>
+      <li><a href="#dev"><span class="num">08</span>Sviluppo</a></li>
     </ol>
     <button class="theme-toggle" id="themeBtn" type="button" aria-label="Cambia tema">◐ tema</button>
   </nav>
@@ -614,14 +649,128 @@
         </div>
       </section>
 
+      <!-- ============ SVILUPPO ============ -->
+      <section id="dev">
+        <div class="sec-head"><span class="sec-num">08</span><h2>Sviluppo</h2></div>
+        <p class="note measure">Come usare il design system nelle app del club (character builder,
+          Harp Forge, tracker). Un import solo, gli stessi token in CSS e in JavaScript, e i
+          componenti pensati per le schede. Ogni riquadro si copia.</p>
+
+        <h3>Importare il sistema</h3>
+        <p class="note measure">Un unico file tira dentro font, token e componenti. Via GitHub Pages
+          funziona come una CDN, senza installare nulla.</p>
+        <div class="snip"><button class="copy" type="button" onclick="copyCode(this)">copia</button><pre>&lt;!-- CDN via GitHub Pages --&gt;
+&lt;link rel="stylesheet"
+      href="https://brainstorm-club.github.io/design-system/brainstorm.css"&gt;
+&lt;link rel="icon" type="image/png"
+      href="https://brainstorm-club.github.io/design-system/assets/favicon.png"&gt;</pre></div>
+        <div class="snip"><button class="copy" type="button" onclick="copyCode(this)">copia</button><pre># In un progetto Vite/Vue/TS (come submodule o pacchetto)
+import '@brainstorm/design-system/brainstorm.css'</pre></div>
+
+        <h3>Token in JavaScript / TypeScript</h3>
+        <p class="note measure">Per i colori dei grafici, il canvas o gli stili dinamici, dove il CSS
+          non arriva. Per i valori che seguono il tema usa <code>cssVar()</code>.</p>
+        <div class="snip"><button class="copy" type="button" onclick="copyCode(this)">copia</button><pre>import { bsc, cssVar, setTheme } from '@brainstorm/design-system/tokens.js'
+
+ctx.fillStyle = bsc.color.rosso          // '#C2332B'
+const serie = bsc.chart                  // palette per i grafici
+el.style.color = cssVar('--bsc-primary') // valore risolto col tema attivo
+setTheme('light')                        // 'dark' | 'light'</pre></div>
+
+        <h3>Form per le schede</h3>
+        <div class="grid cols-2">
+          <div class="panel">
+            <div class="d-field">
+              <label for="raz">Razza</label>
+              <select class="d-select" id="raz"><option>Umano</option><option>Nano</option><option>Elfo</option></select>
+            </div>
+            <label class="d-switch" style="margin-top:var(--s4)"><input type="checkbox" checked><span class="tk"></span><span class="note">Competente</span></label>
+          </div>
+          <div class="snip" style="margin:0"><button class="copy" type="button" onclick="copyCode(this)">copia</button><pre>&lt;div class="bsc-field"&gt;
+  &lt;label for="raz"&gt;Razza&lt;/label&gt;
+  &lt;select class="bsc-select" id="raz"&gt;…&lt;/select&gt;
+&lt;/div&gt;
+
+&lt;label class="bsc-switch"&gt;
+  &lt;input type="checkbox"&gt;
+  &lt;span class="bsc-switch__track"&gt;&lt;/span&gt; Competente
+&lt;/label&gt;
+
+&lt;input type="checkbox" class="bsc-checkbox"&gt;</pre></div>
+        </div>
+
+        <h3>Blocco statistica</h3>
+        <p class="note measure">Punteggio + modificatore: il mattone di ogni scheda.</p>
+        <div class="grid cols-2">
+          <div class="panel"><div class="demo">
+            <div class="d-stat"><span class="l2">For</span><span class="v">16</span><span class="m">+3</span></div>
+            <div class="d-stat"><span class="l2">Des</span><span class="v">12</span><span class="m">+1</span></div>
+            <div class="d-stat"><span class="l2">Cos</span><span class="v">14</span><span class="m">+2</span></div>
+          </div></div>
+          <div class="snip" style="margin:0"><button class="copy" type="button" onclick="copyCode(this)">copia</button><pre>&lt;div class="bsc-stat"&gt;
+  &lt;span class="bsc-stat__label"&gt;For&lt;/span&gt;
+  &lt;span class="bsc-stat__value"&gt;16&lt;/span&gt;
+  &lt;span class="bsc-stat__mod"&gt;+3&lt;/span&gt;
+&lt;/div&gt;</pre></div>
+        </div>
+
+        <h3>Tabella &amp; tab</h3>
+        <div class="grid cols-2">
+          <div class="panel">
+            <div class="d-tabs" style="margin-bottom:var(--s4)"><button class="d-tab on">tratti</button><button class="d-tab">inventario</button><button class="d-tab">note</button></div>
+            <table class="d-table"><thead><tr><th>Arma</th><th>Danno</th></tr></thead>
+              <tbody><tr><td>Spada</td><td>1d8</td></tr><tr><td>Arco</td><td>1d6</td></tr></tbody></table>
+          </div>
+          <div class="snip" style="margin:0"><button class="copy" type="button" onclick="copyCode(this)">copia</button><pre>&lt;nav class="bsc-tabs" role="tablist"&gt;
+  &lt;button class="bsc-tab is-active"&gt;tratti&lt;/button&gt;
+  &lt;button class="bsc-tab"&gt;inventario&lt;/button&gt;
+&lt;/nav&gt;
+
+&lt;table class="bsc-table"&gt;
+  &lt;thead&gt;&lt;tr&gt;&lt;th&gt;Arma&lt;/th&gt;&lt;th class="bsc-num"&gt;Danno&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;
+  &lt;tbody&gt;…&lt;/tbody&gt;
+&lt;/table&gt;</pre></div>
+        </div>
+
+        <h3>Snippet dei componenti base</h3>
+        <p class="note measure">Il markup dei componenti già mostrati sopra, pronto da incollare.</p>
+        <div class="snip"><button class="copy" type="button" onclick="copyCode(this)">copia</button><pre>&lt;!-- Bottoni --&gt;
+&lt;button class="bsc-btn"&gt;prenota&lt;/button&gt;
+&lt;button class="bsc-btn bsc-btn--outline"&gt;scopri&lt;/button&gt;
+&lt;button class="bsc-btn bsc-btn--ghost"&gt;tessera&lt;/button&gt;
+
+&lt;!-- Badge & stato --&gt;
+&lt;span class="bsc-badge bsc-badge--rosso"&gt;GdR&lt;/span&gt;
+&lt;span class="bsc-badge bsc-badge--flag"&gt;Omnibus&lt;/span&gt;
+&lt;span class="bsc-badge bsc-badge--done"&gt;◆ completa&lt;/span&gt;
+&lt;span class="bsc-live"&gt;si sta giocando&lt;/span&gt;
+
+&lt;!-- Card firma (bordo disegnato a mano) --&gt;
+&lt;article class="bsc-card bsc-card--sketch"&gt;…&lt;/article&gt;
+
+&lt;!-- Marchio compatto (si ricolora col tema) --&gt;
+&lt;span class="bsc-wordmark"&gt;
+  &lt;span class="bsc-brandmark" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;span class="bsc-r"&gt;brainstorm&lt;/span&gt;club
+&lt;/span&gt;</pre></div>
+      </section>
+
       <footer>
-        brainstorm club · associazione ludica faentina · design system v1.0 — costruito dal logo.
+        brainstorm club · associazione ludica faentina · design system v1.1 — costruito dal logo.
       </footer>
     </div>
   </main>
 </div>
 
 <script>
+  function copyCode(btn){
+    var pre = btn.parentNode.querySelector('pre'); if(!pre) return;
+    var text = pre.innerText, done = function(){ var o=btn.textContent; btn.textContent='copiato ✓';
+      setTimeout(function(){ btn.textContent=o; }, 1200); };
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done, done); }
+    else { var r=document.createRange(); r.selectNodeContents(pre); var s=getSelection(); s.removeAllRanges(); s.addRange(r);
+      try { document.execCommand('copy'); } catch(e){} s.removeAllRanges(); done(); }
+  }
   (function () {
     var root = document.documentElement, btn = document.getElementById('themeBtn');
     function current(){ return root.getAttribute('data-theme') ||

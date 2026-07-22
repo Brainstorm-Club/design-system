@@ -1,0 +1,14 @@
+/* ==========================================================================
+   Brainstorm Club — Design System · entry-point unico
+   --------------------------------------------------------------------------
+   In un'app basta importare QUESTO file: tira dentro web font, token e
+   componenti. Ordine garantito (token prima dei componenti).
+
+   Uso in un'app (Vite/Vue/TS):   import '@brainstorm/design-system/brainstorm.css'
+   Uso via GitHub Pages (CDN):
+     <link rel="stylesheet" href="https://brainstorm-club.github.io/design-system/brainstorm.css">
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap");
+@import "./tokens.css";
+@import "./components.css";

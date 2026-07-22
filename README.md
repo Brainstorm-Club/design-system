@@ -8,9 +8,11 @@ cervello-doodle e il suo lampo.
 
 | File | Cosa contiene |
 |------|---------------|
-| `tokens.css` | Fonte di verità: colori, tipografia, spazio, raggi, marchio, alias di tema. **Importa per primo.** |
-| `components.css` | Componenti pronti con prefisso `.bsc-` (bottoni, badge, card, form, alert, marchio, box informativo, link a pillola, skip-link). |
-| `index.html` | Living style guide navigabile — la vetrina del sistema (servita da GitHub Pages, anche pubblicata come Artifact). |
+| `brainstorm.css` | **Entry-point unico**: importa font + `tokens.css` + `components.css`. In un'app basta questo. |
+| `tokens.css` | Fonte di verità CSS: colori, tipografia, spazio, raggi, marchio, alias di tema. |
+| `tokens.js` | Gli stessi token in **JavaScript/TS** (`bsc`, `cssVar()`, `setTheme()`) — per grafici, canvas, stili dinamici. |
+| `components.css` | Componenti `.bsc-` (bottoni, badge, card, form, **select/switch/checkbox**, **stat block**, **tabella**, **tab**, alert, box informativo, link a pillola, skip-link, code block). |
+| `index.html` | Living style guide navigabile — la vetrina + la sezione **Sviluppo** con snippet copiabili (GitHub Pages / Artifact). |
 | `assets/favicon.png` | Favicon: cervello bianco su carbone, angoli arrotondati. |
 | `assets/brain-mark.png` | Marchio compatto come **maschera** (alfa) — si ricolora con `currentColor`. |
 
@@ -36,6 +38,31 @@ cervello-doodle e il suo lampo.
 
 > **Nota:** `--bsc-brand-mark` e il favicon puntano a `assets/…` **relativi a `components.css`**.
 > Se importi il CSS da un percorso diverso, aggiorna i path o ridefinisci `--bsc-brand-mark`.
+
+## Uso nelle app del club
+
+Le app (character builder, Harp Forge, tracker) consumano il sistema in un import solo.
+
+**CDN via GitHub Pages** — nessuna installazione:
+
+```html
+<link rel="stylesheet" href="https://brainstorm-club.github.io/design-system/brainstorm.css">
+```
+
+**Progetto Vite / Vue / TS** — come git submodule o pacchetto:
+
+```js
+import '@brainstorm/design-system/brainstorm.css'
+import { bsc, cssVar, setTheme } from '@brainstorm/design-system/tokens.js'
+
+ctx.fillStyle = bsc.color.rosso            // '#C2332B' (colori dei grafici: bsc.chart)
+el.style.color = cssVar('--bsc-primary')   // valore risolto col tema attivo
+setTheme('light')                          // 'dark' | 'light'
+```
+
+Componenti pensati per le schede: `.bsc-field` + `.bsc-select` / `.bsc-switch` / `.bsc-checkbox`,
+`.bsc-stat` (punteggio + modificatore), `.bsc-table`, `.bsc-tabs` / `.bsc-tab`. Il markup pronto è
+nella sezione **Sviluppo** della style guide (ogni riquadro si copia).
 
 ## Fondamentali
 
