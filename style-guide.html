@@ -251,6 +251,17 @@
     border:1px solid var(--border); border-radius:var(--r-pill); padding:var(--s1) var(--s3); white-space:nowrap; }
   .pill:hover { border-color:var(--rosso); color:var(--text); background:color-mix(in srgb,var(--rosso) 12%,transparent); }
   .pill--tool::before { content:"★"; margin-right:.45em; color:var(--rosso-400); }
+  .groundbox { position:relative; isolation:isolate; overflow:hidden; background:var(--carbone);
+    color:var(--bianco); border:1px solid var(--n-700); border-radius:var(--r-lg); min-height:190px;
+    display:grid; place-items:center; text-align:center; padding:var(--s6); }
+  .groundbox::before { content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+    background-image:linear-gradient(rgba(244,241,236,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(244,241,236,.05) 1px,transparent 1px);
+    background-size:34px 34px;
+    -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 30%,#000 40%,transparent 100%);
+            mask-image:radial-gradient(ellipse 80% 70% at 50% 30%,#000 40%,transparent 100%); }
+  .groundbox .gm { font-family:var(--font-display); text-transform:lowercase; font-size:var(--t-2xl); }
+  .groundbox .gn { font-family:var(--font-mono); font-size:var(--t-xs); color:var(--n-300);
+    text-transform:uppercase; letter-spacing:.14em; margin-top:var(--s2); }
 </style>
 
 <div class="shell">
@@ -354,6 +365,18 @@
           <div class="swatch"><div class="chip" style="background:#4C8C63"></div><div class="meta"><div class="name">Successo</div><div class="hex">#4C8C63</div></div></div>
           <div class="swatch"><div class="chip" style="background:#D19A2E"></div><div class="meta"><div class="name">Attenzione</div><div class="hex">#D19A2E</div></div></div>
           <div class="swatch"><div class="chip" style="background:#4E7A8C"></div><div class="meta"><div class="name">Info</div><div class="hex">#4E7A8C</div></div></div>
+        </div>
+
+        <h3>Sfondo &amp; griglia a quadretti</h3>
+        <p class="note measure">Lo sfondo preferito è il <strong>carbone</strong>, il nero del logo
+          (<code>--bsc-carbone</code>). La hero ci posa sopra una <strong>griglia a quadretti</strong>
+          — carta millimetrata di linee tenui che sfuma ai bordi. Utility
+          <code>.bsc-carbone</code> + <code>.bsc-grid&nbsp;.bsc-grid--hero</code>.</p>
+        <div class="groundbox" style="margin-top:var(--s5)">
+          <div>
+            <div class="gm"><span style="color:var(--rosso-400)">carbone</span> + quadretti</div>
+            <div class="gn">passo 34px · linee al 4,5% · sfumate ai bordi</div>
+          </div>
         </div>
       </section>
 

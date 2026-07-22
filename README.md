@@ -47,6 +47,10 @@ cervello-doodle e il suo lampo.
   tratto del cervello. Per i contenuti che devono sembrare scritti a penna.
 - **Il lampo** (SVG nella style guide) è il motivo grafico: marcatore di sezione,
   separatore, accento sui numeri.
+- **Sfondo preferito = carbone.** Il ground del brand è il nero del logo (`--bsc-carbone`,
+  di default via `--bsc-bg`). Per una sezione sempre scura anche in tema carta usa `.bsc-carbone`.
+- **Griglia a quadretti (hero).** Carta millimetrata di linee tenui: `.bsc-grid` (con
+  `--bsc-grid-line` / `--bsc-grid-size`); `.bsc-grid--hero` la fa sfumare ai bordi come nella hero.
 - **Marchio compatto & favicon.** Quando non c'è spazio per la scritta, usa il cervello:
   `.bsc-brandmark` (maschera ricolorabile) accanto al nome, o il favicon nella scheda.
 - **Componenti da sito** ora nel sistema: badge `--flag` (etichetta piena, es. "Omnibus")
