@@ -50,9 +50,25 @@ export function cssVar(name, el) {
   return getComputedStyle(target).getPropertyValue(name).trim();
 }
 
-/** Imposta il tema del design system. @param {'dark'|'light'} theme */
+/** Chiave localStorage del tema (condivisa da tutte le app). */
+export const THEME_KEY = 'bsc-theme';
+
+/** Tema attivo: attributo → localStorage → default 'dark' (carbone). */
+export function getTheme() {
+  if (typeof document === 'undefined') return 'dark';
+  return document.documentElement.getAttribute('data-theme')
+    || (typeof localStorage !== 'undefined' && localStorage.getItem(THEME_KEY))
+    || 'dark';
+}
+
+/** Imposta il tema, lo persiste e notifica (`bsc:themechange`). @param {'dark'|'light'} theme */
 export function setTheme(theme) {
-  if (typeof document !== 'undefined') document.documentElement.setAttribute('data-theme', theme);
+  const t = theme === 'light' ? 'light' : 'dark';
+  if (typeof document === 'undefined') return t;
+  document.documentElement.setAttribute('data-theme', t);
+  try { localStorage.setItem(THEME_KEY, t); } catch (e) { /* storage non disponibile */ }
+  document.dispatchEvent(new CustomEvent('bsc:themechange', { detail: { theme: t } }));
+  return t;
 }
 
 export default bsc;

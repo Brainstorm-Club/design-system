@@ -313,3 +313,17 @@
   border: 1px solid var(--bsc-neutro-800); border-radius: var(--bsc-radius-md);
   padding: var(--bsc-space-3) var(--bsc-space-4);
 }
+
+/* --- Toggle del tema (carbone ⇄ carta) — unico per tutte le app --------
+   Uso: <button class="bsc-theme-toggle" data-bsc-theme-toggle>◐</button>
+   più `initTheme()` da theme.js. Vedi theme.js per lo snippet anti-flash.  */
+.bsc-theme-toggle {
+  width: 36px; height: 36px; display: inline-grid; place-items: center;
+  font-size: 1rem; line-height: 1;
+  background: transparent; color: var(--bsc-text-muted);
+  border: 1px solid var(--bsc-border); border-radius: var(--bsc-radius-pill);
+  cursor: pointer;
+  transition: color var(--bsc-dur-fast) var(--bsc-ease), border-color var(--bsc-dur-fast) var(--bsc-ease);
+}
+.bsc-theme-toggle:hover { color: var(--bsc-text); border-color: var(--bsc-text); }
+.bsc-theme-toggle:focus-visible { outline: 3px solid var(--bsc-focus); outline-offset: 2px; }

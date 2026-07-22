@@ -10,7 +10,8 @@ cervello-doodle e il suo lampo.
 |------|---------------|
 | `brainstorm.css` | **Entry-point unico**: importa font + `tokens.css` + `components.css`. In un'app basta questo. |
 | `tokens.css` | Fonte di verità CSS: colori, tipografia, spazio, raggi, marchio, alias di tema. |
-| `tokens.js` | Gli stessi token in **JavaScript/TS** (`bsc`, `cssVar()`, `setTheme()`) — per grafici, canvas, stili dinamici. |
+| `tokens.js` | Gli stessi token in **JavaScript/TS** (`bsc`, `cssVar()`, `getTheme()`, `setTheme()`) — per grafici, canvas, stili dinamici. |
+| `theme.js` | **Switch del tema unificato** per tutte le app: `initTheme()`, `toggleTheme()` — default scuro, persistenza, auto-wire dei pulsanti. |
 | `components.css` | Componenti `.bsc-` (bottoni, badge, card, form, **select/switch/checkbox**, **stat block**, **tabella**, **tab**, alert, box informativo, link a pillola, skip-link, code block). |
 | `index.html` | Living style guide navigabile — la vetrina + la sezione **Sviluppo** con snippet copiabili (GitHub Pages / Artifact). |
 | `assets/favicon.png` | Favicon: cervello bianco su carbone, angoli arrotondati. |
@@ -63,6 +64,25 @@ setTheme('light')                          // 'dark' | 'light'
 Componenti pensati per le schede: `.bsc-field` + `.bsc-select` / `.bsc-switch` / `.bsc-checkbox`,
 `.bsc-stat` (punteggio + modificatore), `.bsc-table`, `.bsc-tabs` / `.bsc-tab`. Il markup pronto è
 nella sezione **Sviluppo** della style guide (ogni riquadro si copia).
+
+### Tema: uno switch per tutte le app
+
+Lo switch carbone ⇄ carta è **unico**, in `theme.js`: default scuro, la scelta si ricorda
+(`localStorage`, chiave `bsc-theme`). Un pulsante + una chiamata:
+
+```html
+<!-- 1. anti-flash: nell'<head>, PRIMA del CSS -->
+<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('bsc-theme')||'dark')}catch(e){}</script>
+<!-- 2. il pulsante (uno o più, ovunque) -->
+<button class="bsc-theme-toggle" data-bsc-theme-toggle>◐</button>
+```
+
+```js
+// 3. avvia una volta
+import { initTheme } from '@brainstorm/design-system/theme.js'
+initTheme()
+// In Vue/React: getTheme() / setTheme() / toggleTheme() + evento document 'bsc:themechange'
+```
 
 ## Fondamentali
 
