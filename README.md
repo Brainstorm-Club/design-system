@@ -10,7 +10,7 @@ cervello-doodle e il suo lampo.
 |------|---------------|
 | `tokens.css` | Fonte di verità: colori, tipografia, spazio, raggi, marchio, alias di tema. **Importa per primo.** |
 | `components.css` | Componenti pronti con prefisso `.bsc-` (bottoni, badge, card, form, alert, marchio, box informativo, link a pillola, skip-link). |
-| `style-guide.html` | Living style guide navigabile — la vetrina del sistema (anche pubblicata come Artifact). |
+| `index.html` | Living style guide navigabile — la vetrina del sistema (servita da GitHub Pages, anche pubblicata come Artifact). |
 | `assets/favicon.png` | Favicon: cervello bianco su carbone, angoli arrotondati. |
 | `assets/brain-mark.png` | Marchio compatto come **maschera** (alfa) — si ricolora con `currentColor`. |
 
