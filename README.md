@@ -12,6 +12,7 @@ cervello-doodle e il suo lampo.
 | `tokens.css` | Fonte di verità CSS: colori, tipografia, spazio, raggi, marchio, alias di tema. |
 | `tokens.js` | Gli stessi token in **JavaScript/TS** (`bsc`, `cssVar()`, `getTheme()`, `setTheme()`) — per grafici, canvas, stili dinamici. |
 | `theme.js` | **Switch del tema unificato** per tutte le app: `initTheme()`, `toggleTheme()` — default scuro, persistenza, auto-wire dei pulsanti. |
+| `ui.js` | **Comportamenti UI condivisi**: `initUI()` (tema + nav + dropdown + lingua), hamburger responsivo, dropdown/menu, switch lingua (`getLang()`/`setLang()`, evento `bsc:langchange`). |
 | `components.css` | Componenti `.bsc-` (bottoni, badge, card, form, **select/switch/checkbox**, **stat block**, **tabella**, **tab**, alert, box informativo, link a pillola, skip-link, code block). |
 | `index.html` | Living style guide navigabile — la vetrina + la sezione **Sviluppo** con snippet copiabili (GitHub Pages / Artifact). |
 | `assets/favicon.png` | Favicon: cervello bianco su carbone, angoli arrotondati. |
@@ -83,6 +84,26 @@ import { initTheme } from '@brainstorm/design-system/theme.js'
 initTheme()
 // In Vue/React: getTheme() / setTheme() / toggleTheme() + evento document 'bsc:themechange'
 ```
+
+### Navigazione, hamburger e lingua
+
+`ui.js` dà una sola chiamata per tutto (tema incluso): hamburger responsivo, dropdown/menu,
+switch lingua. Comportamento a **delega** (funziona anche in SPA), markup con attributi `data-bsc-*`.
+
+```js
+import { initUI } from '@brainstorm/design-system/ui.js'
+initUI()  // tema + nav + dropdown + lingua
+// L'i18n resta dell'app: ascolta l'evento e imposta la tua libreria
+document.addEventListener('bsc:langchange', e => { i18n.locale = e.detail.lang })
+```
+
+- **Hamburger / nav**: `<button class="bsc-hamburger" data-bsc-nav-toggle aria-controls="main-nav">` +
+  `<nav class="bsc-nav" id="main-nav" data-bsc-nav>`. Orizzontale su desktop, a tendina sotto 720px.
+- **Dropdown**: `.bsc-dropdown` con `[data-bsc-dropdown-trigger]` e `.bsc-dropdown__menu`.
+- **Switch lingua**: dropdown i cui item hanno `data-bsc-lang="it|en"`; `[data-bsc-lang-current]`
+  mostra la lingua attiva. Persistenza `localStorage` (`bsc-lang`), default `it`.
+
+Markup completo e demo interattiva nella sezione **Sviluppo** della style guide.
 
 ## Fondamentali
 

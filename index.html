@@ -294,6 +294,35 @@
     cursor:pointer; transition:color var(--dur-fast), border-color var(--dur-fast); }
   .bsc-tt:hover { color:var(--text); border-color:var(--text); }
   .bsc-tt:focus-visible { outline:3px solid var(--focus); outline-offset:2px; }
+  /* demo nav/hamburger/dropdown/lingua */
+  .dn-bar { position:relative; display:flex; align-items:center; justify-content:space-between; gap:var(--s4);
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--s3) var(--s4); }
+  .dn-burger { width:40px; height:40px; display:inline-grid; place-items:center; background:transparent; color:var(--text);
+    border:1px solid var(--border); border-radius:var(--r-md); cursor:pointer; flex:none; }
+  .dn-burger:focus-visible { outline:3px solid var(--focus); outline-offset:2px; }
+  .dn-box { position:relative; display:block; width:20px; height:2px; background:currentColor; transition:background 0s .18s; }
+  .dn-box::before, .dn-box::after { content:""; position:absolute; left:0; width:100%; height:2px; background:currentColor; transition:transform .18s .18s, top .18s; }
+  .dn-box::before { top:-6px; } .dn-box::after { top:6px; }
+  .dn-burger[aria-expanded="true"] .dn-box { background:transparent; }
+  .dn-burger[aria-expanded="true"] .dn-box::before { top:0; transform:rotate(45deg); transition:top .18s, transform .18s .18s; }
+  .dn-burger[aria-expanded="true"] .dn-box::after { top:0; transform:rotate(-45deg); transition:top .18s, transform .18s .18s; }
+  .dn-nav { position:absolute; top:100%; left:0; right:0; display:none; flex-direction:column; gap:var(--s3); z-index:5;
+    background:var(--surface); border:1px solid var(--border); border-top:0; border-radius:0 0 var(--r-md) var(--r-md); padding:var(--s4); }
+  .dn-nav.is-open { display:flex; }
+  .dn-nav a { font-family:var(--font-mono); font-size:var(--t-sm); color:var(--muted); text-decoration:none; }
+  .dn-nav a:hover { color:var(--text); }
+  .dn-dd { position:relative; }
+  .dn-dd-t { display:inline-flex; align-items:center; gap:var(--s1); font-family:var(--font-mono); font-size:var(--t-sm);
+    text-transform:uppercase; letter-spacing:.06em; color:var(--muted); background:transparent; border:1px solid var(--border);
+    border-radius:var(--r-md); padding:var(--s1) var(--s3); cursor:pointer; }
+  .dn-dd-t:hover { color:var(--text); border-color:var(--text); }
+  .dn-dd-m { position:absolute; right:0; top:calc(100% + 4px); min-width:150px; display:none; z-index:10;
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--r-md); box-shadow:var(--shadow-md); padding:var(--s1); }
+  .dn-dd.is-open .dn-dd-m { display:block; }
+  .dn-dd-i { display:flex; gap:var(--s2); width:100%; text-align:left; font-family:var(--font-body); font-size:var(--t-sm);
+    color:var(--text); background:none; border:0; border-radius:var(--r-sm); padding:var(--s2) var(--s3); cursor:pointer; }
+  .dn-dd-i:hover { background:color-mix(in srgb,var(--text) 8%,transparent); }
+  .dn-dd-i[aria-selected="true"] { color:var(--rosso-400); }
 </style>
 
 <div class="shell">
@@ -752,6 +781,66 @@ setTheme('light')                        // 'dark' | 'light'</pre></div>
   &lt;span class="bsc-r"&gt;brainstorm&lt;/span&gt;club
 &lt;/span&gt;</pre></div>
 
+        <h3>App-bar, hamburger &amp; switch lingua</h3>
+        <p class="note measure">Header responsivo: nav orizzontale su desktop, <strong>hamburger</strong> su
+          mobile; menu e <strong>switch lingua</strong> come dropdown accessibili. Comportamento in
+          <code>ui.js</code> (delega, funziona anche in SPA). Prova qui sotto — hamburger e lingua sono vivi:</p>
+        <div class="grid cols-2">
+          <div class="panel">
+            <div class="dn-bar">
+              <span class="wordmark" style="font-size:var(--t-base)"><span class="brain" aria-hidden="true"></span><span class="r">brainstorm</span>club</span>
+              <div style="display:flex; gap:var(--s2); align-items:center">
+                <div class="dn-dd" data-demo-dd>
+                  <button class="dn-dd-t" data-demo-dd-t type="button" aria-haspopup="listbox" aria-expanded="false"><span data-demo-lang-cur>IT</span> ▾</button>
+                  <div class="dn-dd-m" role="listbox">
+                    <button class="dn-dd-i" type="button" data-demo-lang="it" aria-selected="true">IT&nbsp;&nbsp;<span class="note">Italiano</span></button>
+                    <button class="dn-dd-i" type="button" data-demo-lang="en" aria-selected="false">EN&nbsp;&nbsp;<span class="note">English</span></button>
+                  </div>
+                </div>
+                <button class="dn-burger" data-demo-burger type="button" aria-controls="demo-nav" aria-expanded="false" aria-label="Apri menu"><span class="dn-box"></span></button>
+              </div>
+              <nav class="dn-nav" id="demo-nav" data-demo-nav aria-label="Demo">
+                <a href="#dev">genera</a><a href="#dev">archivio</a><a href="#dev">template</a>
+              </nav>
+            </div>
+            <p class="note" style="margin-top:var(--s3)">Clicca l'hamburger e lo switch lingua (IT/EN).</p>
+          </div>
+          <div class="snip" style="margin:0"><button class="copy" type="button" onclick="copyCode(this)">copia</button><pre>&lt;header class="bsc-appbar"&gt;
+  &lt;div class="bsc-appbar__inner"&gt;
+    &lt;a class="bsc-wordmark" href="/"&gt;…&lt;/a&gt;
+
+    &lt;!-- switch lingua (dropdown) --&gt;
+    &lt;div class="bsc-dropdown bsc-langswitch" data-bsc-dropdown&gt;
+      &lt;button class="bsc-dropdown__trigger" data-bsc-dropdown-trigger
+              aria-haspopup="listbox" aria-expanded="false"&gt;
+        &lt;span data-bsc-lang-current&gt;IT&lt;/span&gt; ▾
+      &lt;/button&gt;
+      &lt;div class="bsc-dropdown__menu" role="listbox"&gt;
+        &lt;button class="bsc-dropdown__item" data-bsc-lang="it"&gt;IT Italiano&lt;/button&gt;
+        &lt;button class="bsc-dropdown__item" data-bsc-lang="en"&gt;EN English&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- hamburger (mobile) --&gt;
+    &lt;button class="bsc-hamburger" data-bsc-nav-toggle
+            aria-controls="main-nav" aria-expanded="false" aria-label="Menu"&gt;
+      &lt;span class="bsc-hamburger__box"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+
+    &lt;nav class="bsc-nav" id="main-nav" data-bsc-nav&gt;
+      &lt;a href="/genera"&gt;genera&lt;/a&gt;&lt;a href="/archivio"&gt;archivio&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/div&gt;
+&lt;/header&gt;
+
+&lt;script type="module"&gt;
+  import { initUI } from '@brainstorm/design-system/ui.js'
+  initUI()  // tema + nav + dropdown + lingua
+  // l'i18n resta dell'app:
+  document.addEventListener('bsc:langchange', e =&gt; { i18n.locale = e.detail.lang })
+&lt;/script&gt;</pre></div>
+        </div>
+
         <h3>Tema: uno switch per tutte le app</h3>
         <p class="note measure">Un componente e un modulo condivisi, così lo switch carbone ⇄ carta è
           identico ovunque: default scuro, la scelta si ricorda (localStorage, chiave
@@ -812,6 +901,21 @@ import { getTheme, setTheme, toggleTheme } from '@brainstorm/design-system/theme
     document.addEventListener('click', function (e) {
       var b = e.target.closest && e.target.closest('[data-bsc-theme-toggle]');
       if (b) { e.preventDefault(); apply(current() === 'dark' ? 'light' : 'dark'); }
+    });
+    // demo di nav/hamburger/dropdown/lingua (stesso comportamento di ui.js)
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      var burger = t.closest && t.closest('[data-demo-burger]');
+      if (burger) { var nav = document.getElementById(burger.getAttribute('aria-controls'));
+        if (nav) { var o = nav.classList.toggle('is-open'); burger.setAttribute('aria-expanded', String(o)); } return; }
+      var ddt = t.closest && t.closest('[data-demo-dd-t]');
+      if (ddt) { var dd = ddt.closest('[data-demo-dd]'); var op = dd.classList.toggle('is-open'); ddt.setAttribute('aria-expanded', String(op)); return; }
+      var li = t.closest && t.closest('[data-demo-lang]');
+      if (li) { var code = li.getAttribute('data-demo-lang');
+        document.querySelectorAll('[data-demo-lang-cur]').forEach(function (x) { x.textContent = code.toUpperCase(); });
+        document.querySelectorAll('[data-demo-lang]').forEach(function (x) { x.setAttribute('aria-selected', String(x === li)); });
+        var d = li.closest('[data-demo-dd]'); if (d) d.classList.remove('is-open'); return; }
+      document.querySelectorAll('[data-demo-dd].is-open').forEach(function (d) { if (!d.contains(t)) d.classList.remove('is-open'); });
     });
     // smooth scroll for in-page nav
     document.querySelectorAll('.sidenav a').forEach(function (a) {
