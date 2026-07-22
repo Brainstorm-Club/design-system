@@ -104,3 +104,105 @@
 
 /* --- Contenitore ------------------------------------------------------ */
 .bsc-container { max-width: var(--bsc-container); margin-inline: auto; padding-inline: var(--bsc-space-5); }
+
+/* ==========================================================================
+   Marchio & favicon
+   Favicon: <link rel="icon" type="image/png" href="assets/favicon.png">
+   ========================================================================== */
+
+/* Marchio compatto: il cervello come MASCHERA, si ricolora con currentColor.
+   È un elemento vuoto: <span class="bsc-brandmark" aria-hidden="true"></span> */
+.bsc-brandmark {
+  display: inline-block; width: 1.35em; height: 1.2em; flex: none;
+  background-color: currentColor;
+  -webkit-mask: var(--bsc-brand-mark) center / contain no-repeat;
+          mask: var(--bsc-brand-mark) center / contain no-repeat;
+}
+
+/* Lockup marchio "🧠 brainstormclub" (minuscolo, typewriter) */
+.bsc-wordmark {
+  display: inline-flex; align-items: center; gap: .08em;
+  font-family: var(--bsc-font-display); font-weight: 700; text-transform: lowercase;
+}
+.bsc-wordmark .bsc-brandmark { margin-right: .3em; }
+.bsc-wordmark .bsc-r { color: var(--bsc-rosso-400); } /* "brainstorm" */
+
+/* ==========================================================================
+   Badge aggiuntivi
+   ========================================================================== */
+/* Etichetta piena (es. "Omnibus" su una copertina) */
+.bsc-badge--flag {
+  background: var(--bsc-rosso); color: #fff; border-color: var(--bsc-rosso);
+  padding: 2px var(--bsc-space-2);
+}
+/* Stato "concluso" (es. "collana completa") */
+.bsc-badge--done { color: var(--bsc-successo); }
+
+/* Indicatore "in corso" — puntino che pulsa */
+.bsc-live {
+  display: inline-flex; align-items: center; gap: var(--bsc-space-2);
+  font-family: var(--bsc-font-mono); font-size: var(--bsc-text-xs);
+  text-transform: uppercase; letter-spacing: .06em; color: var(--bsc-successo);
+}
+.bsc-live::before {
+  content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor;
+  animation: bsc-pulse 2.2s var(--bsc-ease) infinite;
+}
+@keyframes bsc-pulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 55%, transparent); }
+  70%  { box-shadow: 0 0 0 8px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) { .bsc-live::before { animation: none; } }
+
+/* ==========================================================================
+   Card "in arrivo" (placeholder) — cover tratteggiata col lampo
+   ========================================================================== */
+.bsc-card--soon {
+  display: grid; place-items: center; text-align: center;
+  background: var(--bsc-surface); color: var(--bsc-text-faint);
+  border: 2px dashed var(--bsc-border); border-radius: var(--bsc-radius-md);
+  padding: var(--bsc-space-6);
+}
+
+/* ==========================================================================
+   Box informativo (es. "sistema di gioco" sotto una collana)
+   ========================================================================== */
+.bsc-sysbox {
+  display: flex; flex-wrap: wrap; gap: var(--bsc-space-5);
+  align-items: flex-start; justify-content: space-between;
+  padding: var(--bsc-space-4) var(--bsc-space-5);
+  background: var(--bsc-surface);
+  border: 1px solid var(--bsc-border);
+  border-left: 3px solid var(--bsc-rosso);
+  border-radius: var(--bsc-radius-md);
+}
+.bsc-sysbox__main { flex: 1 1 360px; min-width: 0; }
+.bsc-sysbox__links { display: flex; flex-wrap: wrap; gap: var(--bsc-space-2); align-items: center; flex: 0 0 auto; }
+
+/* Link a pillola (riferimenti esterni) */
+.bsc-pill {
+  font-family: var(--bsc-font-mono); font-size: var(--bsc-text-sm);
+  color: var(--bsc-rosso-400); text-decoration: none;
+  border: 1px solid var(--bsc-border); border-radius: var(--bsc-radius-pill);
+  padding: var(--bsc-space-1) var(--bsc-space-3); white-space: nowrap;
+  transition: border-color var(--bsc-dur-fast), color var(--bsc-dur-fast), background var(--bsc-dur-fast);
+}
+.bsc-pill:hover { border-color: var(--bsc-rosso); color: var(--bsc-text); background: color-mix(in srgb, var(--bsc-rosso) 12%, transparent); }
+.bsc-pill:focus-visible { outline: 3px solid var(--bsc-focus); outline-offset: 2px; }
+/* Variante "strumento della community": stella rossa */
+.bsc-pill--tool::before { content: "★"; margin-right: .45em; color: var(--bsc-rosso-400); }
+.bsc-pill--tool:hover::before { color: inherit; }
+
+/* ==========================================================================
+   Accessibilità
+   ========================================================================== */
+/* Salta-al-contenuto: nascosto finché non riceve il focus da tastiera */
+.bsc-skip {
+  position: absolute; left: var(--bsc-space-3); top: -4rem; z-index: 200;
+  background: var(--bsc-rosso); color: #fff; text-decoration: none;
+  font-family: var(--bsc-font-mono); font-size: var(--bsc-text-sm);
+  padding: var(--bsc-space-2) var(--bsc-space-4); border-radius: var(--bsc-radius-md);
+  transition: top var(--bsc-dur-fast) var(--bsc-ease);
+}
+.bsc-skip:focus-visible { top: var(--bsc-space-3); outline: 3px solid #fff; outline-offset: 2px; }

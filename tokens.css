@@ -94,6 +94,17 @@
   --bsc-shadow-md: 0 4px 16px rgba(0,0,0,.45);
   --bsc-shadow-pop: 4px 4px 0 var(--bsc-rosso); /* ombra piena "stampa" */
 
+  /* --- Marchio / favicon ----------------------------------------------- */
+  /* Il cervello del logo, ritagliato e ripulito dalla "b" rossa.
+     `assets/brain-mark.png` è una MASCHERA (canale alfa): usala come
+     mask-image su un elemento con background:currentColor, così si ricolora
+     col tema (bianca su carbone, scura su carta) — vedi .bsc-brandmark.
+     `assets/favicon.png` è il favicon già colorato (cervello bianco su
+     carbone, angoli arrotondati) per la scheda del browser:
+       <link rel="icon" type="image/png" href="assets/favicon.png"> */
+  --bsc-brand-mark: url("assets/brain-mark.png");
+  --bsc-favicon:    url("assets/favicon.png");
+
   /* --- Layout ---------------------------------------------------------- */
   --bsc-container:   72rem; /* 1152px */
   --bsc-measure:     65ch;  /* larghezza di lettura ideale */
@@ -110,7 +121,7 @@
   --bsc-border:        var(--bsc-neutro-700);
   --bsc-text:          var(--bsc-bianco);
   --bsc-text-muted:    var(--bsc-neutro-300);
-  --bsc-text-faint:    var(--bsc-neutro-500);
+  --bsc-text-faint:    #8F8785; /* contrasto AA su carbone anche a corpo piccolo */
   --bsc-primary:       var(--bsc-rosso-600);
   --bsc-primary-hover: var(--bsc-rosso-400);
   --bsc-on-primary:    var(--bsc-bianco);
@@ -125,7 +136,7 @@
   --bsc-border:        var(--bsc-neutro-200);
   --bsc-text:          var(--bsc-neutro-950);
   --bsc-text-muted:    var(--bsc-neutro-600);
-  --bsc-text-faint:    var(--bsc-neutro-400);
+  --bsc-text-faint:    #615B5A; /* contrasto AA su carta anche a corpo piccolo */
   --bsc-primary:       var(--bsc-rosso-700);
   --bsc-primary-hover: var(--bsc-rosso-900);
   --bsc-on-primary:    var(--bsc-bianco);
