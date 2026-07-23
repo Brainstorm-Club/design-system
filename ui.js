@@ -116,13 +116,37 @@ export function initNav() {
   });
 }
 
+/* ---------------------- Copertine con sinossi -------------------------- */
+/* <div class="bsc-cover" tabindex="0" role="button" aria-expanded="false"
+        aria-describedby="syn-1"> <img …> <p class="bsc-cover__synopsis" id="syn-1">…</p> </div>
+   L'hover mostra l'overlay su desktop (CSS); qui tap/click e Invio/Spazio
+   aprono/chiudono (touch + tastiera), Esc e click-fuori chiudono.            */
+function closeCover(c) { c.classList.remove('is-syn'); c.setAttribute('aria-expanded', 'false'); }
+
+export function initCovers() {
+  if (typeof document === 'undefined') return;
+  document.addEventListener('click', (e) => {
+    const cover = e.target.closest && e.target.closest('.bsc-cover[aria-describedby]');
+    document.querySelectorAll('.bsc-cover.is-syn').forEach((c) => { if (c !== cover) closeCover(c); });
+    if (cover) { const open = cover.classList.toggle('is-syn'); cover.setAttribute('aria-expanded', String(open)); }
+  });
+  document.addEventListener('keydown', (e) => {
+    const cover = e.target.closest && e.target.closest('.bsc-cover[aria-describedby]');
+    if (cover && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault(); const open = cover.classList.toggle('is-syn'); cover.setAttribute('aria-expanded', String(open)); return;
+    }
+    if (e.key === 'Escape') document.querySelectorAll('.bsc-cover.is-syn').forEach(closeCover);
+  });
+}
+
 /* ------------------------------- Avvio --------------------------------- */
-/** Avvia tutto: tema + nav + dropdown + lingua. */
+/** Avvia tutto: tema + nav + dropdown + lingua + copertine. */
 export function initUI() {
   initTheme();
   initNav();
   initDropdowns();
   initLang();
+  initCovers();
 }
 
 export default initUI;

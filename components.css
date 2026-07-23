@@ -428,3 +428,36 @@
 
 /* Switch lingua = dropdown specializzato (trigger mostra IT/EN) */
 .bsc-langswitch .bsc-dropdown__trigger { text-transform: uppercase; letter-spacing: .06em; }
+
+/* ==========================================================================
+   Copertina con sinossi (overlay accessibile) — es. libri
+   La sinossi è SEMPRE nel markup (SEO + screen reader); l'overlay compare
+   su hover, focus e tap (disclosure). Comportamento: initCovers() in ui.js.
+   Per la SEO aggiungi un JSON-LD `Book` con la stessa `description`.
+   Markup:
+     <div class="bsc-cover" tabindex="0" role="button" aria-expanded="false"
+          aria-describedby="syn-1">
+       <img src="…" alt="Copertina di …">
+       <p class="bsc-cover__synopsis" id="syn-1">…sinossi…</p>
+     </div>
+   ========================================================================== */
+.bsc-cover {
+  position: relative; display: block; overflow: hidden; cursor: pointer;
+  aspect-ratio: 2 / 3; background: var(--bsc-surface-2);
+  border: 1px solid var(--bsc-border); border-radius: var(--bsc-radius-md);
+  box-shadow: var(--bsc-shadow-md);
+}
+.bsc-cover:focus-visible { outline: 3px solid var(--bsc-focus); outline-offset: 2px; }
+.bsc-cover > img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bsc-cover__synopsis {
+  position: absolute; inset: 0; margin: 0; box-sizing: border-box; z-index: 2;
+  display: flex; align-items: center; overflow-y: auto; padding: var(--bsc-space-4);
+  background: color-mix(in srgb, var(--bsc-carbone) 94%, transparent);
+  color: var(--bsc-bianco); font-family: var(--bsc-font-body);
+  font-size: var(--bsc-text-sm); line-height: 1.5;
+  opacity: 0; pointer-events: none; transition: opacity var(--bsc-dur-base) var(--bsc-ease);
+}
+.bsc-cover:hover .bsc-cover__synopsis,
+.bsc-cover:focus-within .bsc-cover__synopsis,
+.bsc-cover.is-syn .bsc-cover__synopsis { opacity: 1; pointer-events: auto; }
+@media (prefers-reduced-motion: reduce) { .bsc-cover__synopsis { transition: none; } }

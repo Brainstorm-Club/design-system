@@ -327,6 +327,16 @@
     color:var(--text); background:none; border:0; border-radius:var(--r-sm); padding:var(--s2) var(--s3); cursor:pointer; }
   .dn-dd-i:hover { background:color-mix(in srgb,var(--text) 8%,transparent); }
   .dn-dd-i[aria-selected="true"] { color:var(--rosso-400); }
+  /* demo copertina con sinossi */
+  .dc-cover { position:relative; overflow:hidden; cursor:pointer; aspect-ratio:2/3; max-width:150px;
+    background:linear-gradient(160deg, var(--n-800), var(--carbone)); border:1px solid var(--border);
+    border-radius:var(--r-md); display:grid; place-items:center; }
+  .dc-cover:focus-visible { outline:3px solid var(--focus); outline-offset:2px; }
+  .dc-cover .t { font-family:var(--font-display); text-transform:lowercase; color:var(--rosso-400); font-size:var(--t-lg); padding:var(--s3); text-align:center; }
+  .dc-syn { position:absolute; inset:0; margin:0; display:flex; align-items:center; padding:var(--s4); z-index:2;
+    background:color-mix(in srgb,var(--carbone) 94%, transparent); color:var(--bianco); font-size:var(--t-sm); line-height:1.5;
+    opacity:0; pointer-events:none; transition:opacity var(--dur) var(--ease); }
+  .dc-cover:hover .dc-syn, .dc-cover:focus-within .dc-syn, .dc-cover.is-syn .dc-syn { opacity:1; pointer-events:auto; }
 </style>
 
 <div class="shell">
@@ -845,6 +855,36 @@ setTheme('light')                        // 'dark' | 'light'</pre></div>
 &lt;/script&gt;</pre></div>
         </div>
 
+        <h3>Copertina con sinossi</h3>
+        <p class="note measure">La sinossi è <strong>sempre nel markup</strong> (SEO + screen reader);
+          l'overlay compare su hover, focus e tap (disclosure). Per la SEO aggiungi un
+          <code>Book</code> JSON-LD con la stessa descrizione. Passa il mouse o clicca la copertina:</p>
+        <div class="grid cols-2">
+          <div class="panel" style="display:flex; justify-content:center">
+            <div class="dc-cover" tabindex="0" role="button" aria-expanded="false" aria-describedby="demo-syn" aria-label="Copertina: la rosaspina — sinossi">
+              <span class="t">la rosaspina</span>
+              <p class="dc-syn" id="demo-syn">Un favore facile su una nave fantasma diventa una storia di legno che galleggia, ama, parla e — a Penumbria — brucia.</p>
+            </div>
+          </div>
+          <div class="snip" style="margin:0"><button class="copy" type="button" onclick="copyCode(this)">copia</button><pre>&lt;div class="bsc-cover" tabindex="0" role="button"
+     aria-expanded="false" aria-describedby="syn-1"&gt;
+  &lt;img src="copertina.jpg" alt="Copertina di …"&gt;
+  &lt;p class="bsc-cover__synopsis" id="syn-1"&gt;…sinossi…&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;script type="module"&gt;
+  import { initCovers } from '@brainstorm/design-system/ui.js'
+  initCovers()   // initUI() lo include già
+&lt;/script&gt;
+
+&lt;!-- SEO: stessa descrizione come dato strutturato --&gt;
+&lt;script type="application/ld+json"&gt;
+{ "@context":"https://schema.org", "@type":"Book",
+  "name":"…", "author":"…", "description":"…sinossi…",
+  "inLanguage":"it", "bookFormat":"https://schema.org/EBook" }
+&lt;/script&gt;</pre></div>
+        </div>
+
         <h3>Tema: uno switch per tutte le app</h3>
         <p class="note measure">Un componente e un modulo condivisi, così lo switch carbone ⇄ carta è
           identico ovunque: default scuro, la scelta si ricorda (localStorage, chiave
@@ -921,6 +961,13 @@ import { getTheme, setTheme, toggleTheme } from '@brainstorm/design-system/theme
         document.querySelectorAll('[data-demo-lang]').forEach(function (x) { x.setAttribute('aria-selected', String(x === li)); });
         var d = li.closest('[data-demo-dd]'); if (d) d.classList.remove('is-open'); return; }
       document.querySelectorAll('[data-demo-dd].is-open').forEach(function (d) { if (!d.contains(t)) d.classList.remove('is-open'); });
+      // demo copertina con sinossi (stesso comportamento di initCovers)
+      var cov = t.closest && t.closest('.dc-cover');
+      document.querySelectorAll('.dc-cover.is-syn').forEach(function (c) { if (c !== cov) { c.classList.remove('is-syn'); c.setAttribute('aria-expanded','false'); } });
+      if (cov) { var so = cov.classList.toggle('is-syn'); cov.setAttribute('aria-expanded', String(so)); }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') document.querySelectorAll('.dc-cover.is-syn').forEach(function (c) { c.classList.remove('is-syn'); c.setAttribute('aria-expanded','false'); });
     });
     // smooth scroll for in-page nav
     document.querySelectorAll('.sidenav a').forEach(function (a) {

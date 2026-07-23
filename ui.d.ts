@@ -13,6 +13,7 @@ export function setLang(lang: string): string;
 export function initNav(): void;
 export function initDropdowns(): void;
 export function initLang(): void;
+export function initCovers(): void;
 
 /** Avvia tutto: tema + nav + dropdown + lingua. */
 export function initUI(): void;

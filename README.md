@@ -12,7 +12,7 @@ cervello-doodle e il suo lampo.
 | `tokens.css` | Fonte di verità CSS: colori, tipografia, spazio, raggi, marchio, alias di tema. |
 | `tokens.js` | Gli stessi token in **JavaScript/TS** (`bsc`, `cssVar()`, `getTheme()`, `setTheme()`) — per grafici, canvas, stili dinamici. |
 | `theme.js` | **Switch del tema unificato** per tutte le app: `initTheme()`, `toggleTheme()` — default scuro, persistenza, auto-wire dei pulsanti. |
-| `ui.js` | **Comportamenti UI condivisi**: `initUI()` (tema + nav + dropdown + lingua), hamburger responsivo, dropdown/menu, switch lingua (`getLang()`/`setLang()`, evento `bsc:langchange`). |
+| `ui.js` | **Comportamenti UI condivisi**: `initUI()` (tema + nav + dropdown + lingua + copertine), hamburger responsivo, dropdown/menu, switch lingua (`getLang()`/`setLang()`, evento `bsc:langchange`), **copertina con sinossi** (`initCovers()`). |
 | `components.css` | Componenti `.bsc-` (bottoni, badge, card, form, **select/switch/checkbox**, **stat block**, **tabella**, **tab**, alert, box informativo, link a pillola, skip-link, code block). |
 | `index.html` | Living style guide navigabile — la vetrina + la sezione **Sviluppo** con snippet copiabili (GitHub Pages / Artifact). |
 | `assets/favicon.png` | Favicon: cervello bianco su carbone, angoli arrotondati. |
