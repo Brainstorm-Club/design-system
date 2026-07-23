@@ -108,11 +108,16 @@
      `assets/brain-mark.png` è una MASCHERA (canale alfa): usala come
      mask-image su un elemento con background:currentColor, così si ricolora
      col tema (bianca su carbone, scura su carta) — vedi .bsc-brandmark.
+     `assets/favicon.svg` è il cervello vettoriale (scalabile, nitido su ogni
+     densità): preferiscilo, con il PNG come fallback per i browser datati.
      `assets/favicon.png` è il favicon già colorato (cervello bianco su
-     carbone, angoli arrotondati) per la scheda del browser:
-       <link rel="icon" type="image/png" href="assets/favicon.png"> */
-  --bsc-brand-mark: url("assets/brain-mark.png");
-  --bsc-favicon:    url("assets/favicon.png");
+     carbone, angoli arrotondati) per la scheda del browser. Ordine consigliato
+     (il browser sceglie il primo formato che supporta):
+       <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+       <link rel="icon" type="image/png"     href="assets/favicon.png"> */
+  --bsc-brand-mark:  url("assets/brain-mark.png");
+  --bsc-favicon-svg: url("assets/favicon.svg");
+  --bsc-favicon:     url("assets/favicon.png");
 
   /* --- Layout ---------------------------------------------------------- */
   --bsc-container:   72rem; /* 1152px */
