@@ -61,7 +61,10 @@ export function getTheme() {
     || 'dark';
 }
 
-/** Imposta il tema, lo persiste e notifica (`bsc:themechange`). @param {'dark'|'light'} theme */
+/** Imposta il tema EFFETTIVO, lo persiste e notifica (`bsc:themechange`).
+ *  Livello "effettivo": il valore è sempre 'dark' o 'light' (mai 'auto'), così
+ *  il contratto condiviso (data-theme + localStorage `bsc-theme`) resta esplicito
+ *  e leggibile da ogni app. @param {'dark'|'light'} theme */
 export function setTheme(theme) {
   const t = theme === 'light' ? 'light' : 'dark';
   if (typeof document === 'undefined') return t;
@@ -69,6 +72,50 @@ export function setTheme(theme) {
   try { localStorage.setItem(THEME_KEY, t); } catch (e) { /* storage non disponibile */ }
   document.dispatchEvent(new CustomEvent('bsc:themechange', { detail: { theme: t } }));
   return t;
+}
+
+/* --- Livello PREFERENZA (scelta esplicita dell'utente) -------------------
+   Il tema è a tre stati: 'dark' | 'light' | 'auto'. 'auto' segue l'OS ma viene
+   SEMPRE risolto in un tema effettivo concreto (via setTheme), così data-theme
+   e `bsc-theme` restano espliciti e le app bi-stato (harp, sito) non regrediscono.
+   La preferenza vive in una chiave separata; l'attributo data-theme-pref sul
+   <html> serve solo a mostrare l'icona giusta del toggle. Default: scuro. */
+
+/** Chiave localStorage della PREFERENZA di tema ('dark'|'light'|'auto'). */
+export const THEME_PREF_KEY = 'bsc-theme-pref';
+
+/** Preferenza esplicita: 'dark' | 'light' | 'auto'. Default 'dark'.
+ *  Migra dal vecchio valore effettivo (`bsc-theme`) se la preferenza non esiste. */
+export function getThemePref() {
+  if (typeof localStorage === 'undefined') return 'dark';
+  try {
+    const p = localStorage.getItem(THEME_PREF_KEY);
+    if (p === 'dark' || p === 'light' || p === 'auto') return p;
+    return localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark';
+  } catch (e) { return 'dark'; }
+}
+
+/** Risolve una preferenza nel tema EFFETTIVO ('dark'|'light').
+ *  'auto' segue l'OS; se non determinabile, default 'dark' (carbone). */
+export function resolveTheme(pref) {
+  const p = pref || getThemePref();
+  if (p === 'light' || p === 'dark') return p;
+  if (typeof window !== 'undefined' && window.matchMedia
+      && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
+  return 'dark';
+}
+
+/** Imposta la PREFERENZA, la persiste, marca `data-theme-pref` sul <html> e
+ *  applica il tema effettivo via setTheme (aggiorna data-theme, `bsc-theme`,
+ *  evento). @param {'dark'|'light'|'auto'} pref  Ritorna la preferenza applicata. */
+export function setThemePref(pref) {
+  const p = (pref === 'light' || pref === 'auto') ? pref : 'dark';
+  if (typeof document !== 'undefined') {
+    document.documentElement.setAttribute('data-theme-pref', p);
+    try { localStorage.setItem(THEME_PREF_KEY, p); } catch (e) { /* no storage */ }
+  }
+  setTheme(resolveTheme(p));
+  return p;
 }
 
 export default bsc;

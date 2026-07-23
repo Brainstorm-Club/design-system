@@ -1,7 +1,11 @@
 /* Tipi per ui.js — comportamenti UI condivisi (nav, dropdown, lingua, tema). */
 export type Theme = 'dark' | 'light';
+export type ThemePref = 'dark' | 'light' | 'auto';
 
-export { getTheme, setTheme, toggleTheme, initTheme } from './theme.js';
+export {
+  getTheme, setTheme, toggleTheme, initTheme,
+  getThemePref, setThemePref, cycleTheme,
+} from './theme.js';
 
 export const LANG_KEY: string;
 

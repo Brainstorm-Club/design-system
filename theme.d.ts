@@ -1,12 +1,19 @@
 /* Tipi per theme.js — switch tema unificato del design system. */
-export type Theme = 'dark' | 'light';
+import type { Theme, ThemePref } from './tokens.js';
+export type { Theme, ThemePref };
 
-export { getTheme, setTheme, THEME_KEY } from './tokens.js';
+export {
+  getTheme, setTheme, THEME_KEY,
+  getThemePref, setThemePref, resolveTheme, THEME_PREF_KEY,
+} from './tokens.js';
 
-/** Alterna carbone ⇄ carta. Ritorna il nuovo tema. */
+/** Alterna carbone ⇄ carta (bi-stato). Ritorna il tema effettivo. */
 export function toggleTheme(): Theme;
 
-/** Applica il tema persistito (o scuro di default) e collega i toggle. */
+/** Cicla la preferenza: scuro → chiaro → auto → scuro. Ritorna la preferenza. */
+export function cycleTheme(): ThemePref;
+
+/** Applica la preferenza persistita, risolve 'auto' e collega i toggle. */
 export function initTheme(): void;
 
 declare const _default: typeof initTheme;

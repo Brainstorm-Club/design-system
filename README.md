@@ -11,7 +11,7 @@ cervello-doodle e il suo lampo.
 | `brainstorm.css` | **Entry-point unico**: importa font + `tokens.css` + `components.css`. In un'app basta questo. |
 | `tokens.css` | Fonte di verità CSS: colori, tipografia, spazio, raggi, marchio, alias di tema. |
 | `tokens.js` | Gli stessi token in **JavaScript/TS** (`bsc`, `cssVar()`, `getTheme()`, `setTheme()`) — per grafici, canvas, stili dinamici. |
-| `theme.js` | **Switch del tema unificato** per tutte le app: `initTheme()`, `toggleTheme()` — default scuro, persistenza, auto-wire dei pulsanti. |
+| `theme.js` | **Switch del tema unificato** per tutte le app. Tri-stato di scelta esplicita: **scuro → chiaro → auto** (segue l'OS), default scuro. `initTheme()` (auto-wire + ciclo), `cycleTheme()`/`getThemePref()`/`setThemePref()` per il tri-stato, `toggleTheme()`/`getTheme()`/`setTheme()` per il bi-stato. La preferenza vive in `bsc-theme-pref`; il tema *effettivo* (sempre `dark`/`light`) in `bsc-theme` → le app bi-stato non regrediscono. |
 | `ui.js` | **Comportamenti UI condivisi**: `initUI()` (tema + nav + dropdown + lingua + copertine + **bottom sheet**), hamburger responsivo, dropdown/menu, switch lingua (`getLang()`/`setLang()`, evento `bsc:langchange`), **copertina con sinossi** (`initCovers()`), **bottom sheet** (`initSheets()`/`openSheet()`/`closeSheet()`), **toast** (`bscToast()`). |
 | `components.css` | Componenti `.bsc-` (bottoni, badge, card, form, **select/switch/checkbox**, **selettore segmentato**, **stat block**, **tabella**, **tab**, **bottom sheet**, **toast**, alert, box informativo, link a pillola, skip-link, code block). |
 | `index.html` | Living style guide navigabile — la vetrina + la sezione **Sviluppo** con snippet copiabili (GitHub Pages / Artifact). |
@@ -74,10 +74,10 @@ Lo switch carbone ⇄ carta è **unico**, in `theme.js`: default scuro, la scelt
 (`localStorage`, chiave `bsc-theme`). Un pulsante + una chiamata:
 
 ```html
-<!-- 1. anti-flash: nell'<head>, PRIMA del CSS -->
-<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('bsc-theme')||'dark')}catch(e){}</script>
+<!-- 1. anti-flash: nell'<head>, PRIMA del CSS (risolve anche 'auto') -->
+<script>try{var p=localStorage.getItem('bsc-theme-pref')||localStorage.getItem('bsc-theme')||'dark',e=p==='auto'?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):p,d=document.documentElement;d.setAttribute('data-theme',e);d.setAttribute('data-theme-pref',p)}catch(e){}</script>
 <!-- 2. il pulsante (uno o più, ovunque) -->
-<!-- vuoto: initTheme() inietta le icone sole/luna -->
+<!-- vuoto: initTheme() inietta le icone luna/sole/auto -->
 <button class="bsc-theme-toggle" data-bsc-theme-toggle></button>
 ```
 

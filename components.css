@@ -336,6 +336,13 @@
 .bsc-tt-sun { display: none; }
 :root[data-theme="light"] .bsc-tt-sun  { display: block; }
 :root[data-theme="light"] .bsc-tt-moon { display: none; }
+/* Terzo stato "auto" (segue l'OS) — additivo: attivo solo quando <html> ha
+   data-theme-pref="auto" (lo imposta theme.js). Le app bi-stato non lo settano
+   mai, quindi mantengono luna/sole invariate. */
+.bsc-tt-auto { width: 18px; height: 18px; display: none; }
+:root[data-theme-pref="auto"] .bsc-tt-auto { display: block; }
+:root[data-theme-pref="auto"] .bsc-tt-sun,
+:root[data-theme-pref="auto"] .bsc-tt-moon { display: none; }
 
 /* ==========================================================================
    Navigazione: app-bar, nav responsive, hamburger, dropdown, switch lingua
