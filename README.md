@@ -75,7 +75,8 @@ Lo switch carbone ⇄ carta è **unico**, in `theme.js`: default scuro, la scelt
 <!-- 1. anti-flash: nell'<head>, PRIMA del CSS -->
 <script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('bsc-theme')||'dark')}catch(e){}</script>
 <!-- 2. il pulsante (uno o più, ovunque) -->
-<button class="bsc-theme-toggle" data-bsc-theme-toggle>◐</button>
+<!-- vuoto: initTheme() inietta le icone sole/luna -->
+<button class="bsc-theme-toggle" data-bsc-theme-toggle></button>
 ```
 
 ```js

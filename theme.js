@@ -9,7 +9,8 @@
      import { initTheme } from '@brainstorm/design-system/theme.js'
      initTheme()
 
-     <button class="bsc-theme-toggle" data-bsc-theme-toggle aria-label="Cambia tema">◐</button>
+     <button class="bsc-theme-toggle" data-bsc-theme-toggle aria-label="Cambia tema"></button>
+     (initTheme() inietta le icone sole/luna; nessun testo)
 
    Per evitare il "flash" al caricamento, aggiungi nell'<head>, PRIMA del CSS:
      <script>try{document.documentElement.setAttribute('data-theme',
@@ -28,16 +29,23 @@ export function toggleTheme() {
   return setTheme(getTheme() === 'dark' ? 'light' : 'dark');
 }
 
-/** Allinea l'aspetto dei pulsanti [data-bsc-theme-toggle] al tema attivo. */
+/* Icone sole/luna del toggle (nessun testo). Quale si vede lo decide il CSS in
+   base a [data-theme]: luna sul tema scuro, sole sul chiaro (vedi components.css). */
+const TOGGLE_ICONS =
+  '<svg class="bsc-tt-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">'
+  + '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>'
+  + '<svg class="bsc-tt-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">'
+  + '<circle cx="12" cy="12" r="5" stroke-width="2"/>'
+  + '<path stroke-linecap="round" stroke-width="2" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+
+/** Allinea i pulsanti [data-bsc-theme-toggle] al tema: aria + icone sole/luna. */
 function syncToggles() {
   const t = getTheme();
   document.querySelectorAll('[data-bsc-theme-toggle]').forEach((btn) => {
     btn.setAttribute('aria-pressed', String(t === 'light'));
     btn.setAttribute('aria-label', t === 'dark' ? 'Passa al tema chiaro' : 'Passa al tema scuro');
-    const icon = btn.querySelector('[data-bsc-theme-icon]');
-    const glyph = t === 'dark' ? '◐' : '◑';
-    if (icon) icon.textContent = glyph;
-    else if (!btn.children.length) btn.textContent = glyph;
+    // Inietta le icone una sola volta (se il pulsante non contiene già un'icona).
+    if (!btn.querySelector('svg')) btn.innerHTML = TOGGLE_ICONS;
   });
 }
 

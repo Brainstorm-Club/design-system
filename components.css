@@ -316,12 +316,12 @@
   padding: var(--bsc-space-3) var(--bsc-space-4);
 }
 
-/* --- Toggle del tema (carbone ⇄ carta) — unico per tutte le app --------
-   Uso: <button class="bsc-theme-toggle" data-bsc-theme-toggle>◐</button>
-   più `initTheme()` da theme.js. Vedi theme.js per lo snippet anti-flash.  */
+/* --- Toggle del tema (icone sole/luna) — unico per tutte le app ---------
+   Uso: <button class="bsc-theme-toggle" data-bsc-theme-toggle></button>
+   `initTheme()` (theme.js) inietta le icone e collega il click.
+   Vedi theme.js per lo snippet anti-flash.  */
 .bsc-theme-toggle {
   width: 36px; height: 36px; display: inline-grid; place-items: center;
-  font-size: 1rem; line-height: 1;
   background: transparent; color: var(--bsc-text-muted);
   border: 1px solid var(--bsc-border); border-radius: var(--bsc-radius-pill);
   cursor: pointer;
@@ -329,6 +329,13 @@
 }
 .bsc-theme-toggle:hover { color: var(--bsc-text); border-color: var(--bsc-text); }
 .bsc-theme-toggle:focus-visible { outline: 3px solid var(--bsc-focus); outline-offset: 2px; }
+
+/* Icone sole/luna del toggle: luna sul tema scuro (default), sole sul chiaro.
+   Funziona su qualsiasi pulsante che contenga .bsc-tt-sun / .bsc-tt-moon. */
+.bsc-tt-sun, .bsc-tt-moon { width: 18px; height: 18px; display: block; }
+.bsc-tt-sun { display: none; }
+:root[data-theme="light"] .bsc-tt-sun  { display: block; }
+:root[data-theme="light"] .bsc-tt-moon { display: none; }
 
 /* ==========================================================================
    Navigazione: app-bar, nav responsive, hamburger, dropdown, switch lingua
