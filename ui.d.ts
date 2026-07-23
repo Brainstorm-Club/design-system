@@ -15,7 +15,17 @@ export function initDropdowns(): void;
 export function initLang(): void;
 export function initCovers(): void;
 
-/** Avvia tutto: tema + nav + dropdown + lingua. */
+/** Mostra un toast transitorio (bottom-center), riusando un unico live region. */
+export function bscToast(message: string, opts?: { duration?: number }): void;
+
+/** Apre un bottom sheet (per id o elemento `.bsc-sheet-backdrop`). */
+export function openSheet(elOrId: string | HTMLElement): void;
+/** Chiude un bottom sheet; senza argomento chiude quello aperto. */
+export function closeSheet(elOrId?: string | HTMLElement): void;
+/** Auto-wire dei bottom sheet via data-attr (open/close, backdrop, Esc). */
+export function initSheets(): void;
+
+/** Avvia tutto: tema + nav + dropdown + lingua + copertine + bottom sheet. */
 export function initUI(): void;
 
 declare const _default: typeof initUI;

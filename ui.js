@@ -139,14 +139,80 @@ export function initCovers() {
   });
 }
 
+/* ------------------------------- Toast --------------------------------- */
+let _toastEl = null;
+let _toastTimer = null;
+/** Mostra un toast transitorio (bottom-center). Crea/riusa un unico live
+ *  region ARIA, così chiamate ripetute non accumulano nodi.
+ *  @param {string} message  testo da mostrare
+ *  @param {{duration?: number}} [opts]  durata in ms (default 2500) */
+export function bscToast(message, opts) {
+  if (typeof document === 'undefined') return;
+  const duration = (opts && opts.duration) || 2500;
+  if (!_toastEl) {
+    _toastEl = document.createElement('div');
+    _toastEl.className = 'bsc-toast';
+    _toastEl.setAttribute('role', 'status');
+    _toastEl.setAttribute('aria-live', 'polite');
+    document.body.appendChild(_toastEl);
+  }
+  _toastEl.textContent = message;
+  void _toastEl.offsetWidth; // reflow: riavvia la transizione anche a toast già visibile
+  _toastEl.classList.add('is-show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => { if (_toastEl) _toastEl.classList.remove('is-show'); }, duration);
+}
+
+/* ----------------------------- Bottom sheet ---------------------------- */
+function _resolveSheet(elOrId) {
+  if (!elOrId) return null;
+  return typeof elOrId === 'string' ? document.getElementById(elOrId) : elOrId;
+}
+/** Apre un bottom sheet (per id o elemento .bsc-sheet-backdrop). */
+export function openSheet(elOrId) {
+  const sheet = _resolveSheet(elOrId);
+  if (!sheet) return;
+  sheet.hidden = false;
+  document.body.style.overflow = 'hidden';
+  const focusable = sheet.querySelector('[autofocus], .bsc-sheet__close, button, [href], input, select, textarea');
+  if (focusable && focusable.focus) focusable.focus();
+  document.dispatchEvent(new CustomEvent('bsc:sheetopen', { detail: { sheet } }));
+}
+/** Chiude un bottom sheet; senza argomento chiude quello aperto. */
+export function closeSheet(elOrId) {
+  const sheet = elOrId ? _resolveSheet(elOrId) : document.querySelector('.bsc-sheet-backdrop:not([hidden])');
+  if (!sheet) return;
+  sheet.hidden = true;
+  document.body.style.overflow = '';
+  document.dispatchEvent(new CustomEvent('bsc:sheetclose', { detail: { sheet } }));
+}
+/** Auto-wire dei bottom sheet via data-attr: [data-bsc-sheet-open="id"],
+ *  [data-bsc-sheet-close], click sul backdrop, tasto Esc. */
+export function initSheets() {
+  if (typeof document === 'undefined') return;
+  document.addEventListener('click', (e) => {
+    const t = e.target;
+    if (!t || !t.closest) return;
+    const opener = t.closest('[data-bsc-sheet-open]');
+    if (opener) { openSheet(opener.getAttribute('data-bsc-sheet-open')); return; }
+    const closer = t.closest('[data-bsc-sheet-close]');
+    if (closer) { closeSheet(closer.closest('.bsc-sheet-backdrop')); return; }
+    if (t.classList && t.classList.contains('bsc-sheet-backdrop')) closeSheet(t);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSheet();
+  });
+}
+
 /* ------------------------------- Avvio --------------------------------- */
-/** Avvia tutto: tema + nav + dropdown + lingua + copertine. */
+/** Avvia tutto: tema + nav + dropdown + lingua + copertine + bottom sheet. */
 export function initUI() {
   initTheme();
   initNav();
   initDropdowns();
   initLang();
   initCovers();
+  initSheets();
 }
 
 export default initUI;

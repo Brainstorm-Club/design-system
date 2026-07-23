@@ -638,6 +638,44 @@
             <a class="pill pill--tool" href="#brand">Strumento ↗</a>
           </div>
         </div>
+
+        <h3>Selettore segmentato · scelta rapida</h3>
+        <p class="note measure">Choice-chips per scegliere da un set discreto (difficoltà, grado, livello).
+          Stato attivo con <code>aria-pressed="true"</code> o <code>.is-selected</code>; un solo accento (il rosso).
+          Nato nel tracker XP, utile nei character builder.</p>
+        <div class="panel"><div class="demo" role="group" aria-label="Difficoltà (esempio)" style="gap:var(--s2)">
+          <button type="button" style="min-height:44px;padding:var(--s2) var(--s3);border:2px solid #C2332B;border-radius:3px;background:rgba(194,51,43,.18);color:var(--text,#F4F1EC);font-weight:700;cursor:pointer">Medio</button>
+          <button type="button" style="min-height:44px;padding:var(--s2) var(--s3);border:2px solid var(--ink,#3B3636);border-radius:3px;background:transparent;color:var(--muted,#8A8180);font-weight:600;cursor:pointer">Difficile</button>
+          <button type="button" style="min-height:44px;padding:var(--s2) var(--s3);border:2px solid var(--ink,#3B3636);border-radius:3px;background:transparent;color:var(--muted,#8A8180);font-weight:600;cursor:pointer">Assurdo</button>
+        </div></div>
+        <div class="snip" style="margin:0"><button class="copy" type="button" onclick="copyCode(this)">copia</button><pre>&lt;div class="bsc-optgroup" role="group" aria-label="Difficoltà"&gt;
+  &lt;button class="bsc-opt" type="button" aria-pressed="true"&gt;Medio&lt;/button&gt;
+  &lt;button class="bsc-opt" type="button"&gt;Difficile&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- a griglia: N colonne via --bsc-opt-cols --&gt;
+&lt;div class="bsc-optgroup bsc-optgroup--grid" style="--bsc-opt-cols:3"&gt; … &lt;/div&gt;</pre></div>
+
+        <h3>Bottom sheet &amp; toast</h3>
+        <p class="note measure">Il <strong>bottom sheet</strong> è il dialog mobile-first (sale a tendina, su desktop si centra):
+          chiudibile con backdrop, Esc o <code>[data-bsc-sheet-close]</code>. Auto-wire con <code>initSheets()</code>
+          (già incluso in <code>initUI()</code>), oppure gestisci <code>[hidden]</code> dal framework.
+          Il <strong>toast</strong> è una notifica transitoria: usa <code>bscToast(msg)</code> di <code>ui.js</code>.</p>
+        <div class="snip" style="margin:0"><button class="copy" type="button" onclick="copyCode(this)">copia</button><pre>&lt;button type="button" data-bsc-sheet-open="sheet-log"&gt;Apri&lt;/button&gt;
+&lt;div class="bsc-sheet-backdrop" id="sheet-log" data-bsc-sheet hidden&gt;
+  &lt;div class="bsc-sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-log-t"&gt;
+    &lt;header class="bsc-sheet__head"&gt;
+      &lt;h2 class="bsc-sheet__title" id="sheet-log-t"&gt;Titolo&lt;/h2&gt;
+      &lt;button class="bsc-sheet__close" type="button" data-bsc-sheet-close aria-label="Chiudi"&gt;✕&lt;/button&gt;
+    &lt;/header&gt;
+    … contenuto …
+  &lt;/div&gt;
+&lt;/div&gt;
+
+// JS
+import { initSheets, openSheet, closeSheet, bscToast } from '@brainstorm/design-system/ui.js'
+initSheets()               // auto-wire dei data-attr
+bscToast('Backup esportato')</pre></div>
       </section>
 
       <!-- ============ VOCE & TONO ============ -->

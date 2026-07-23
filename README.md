@@ -12,10 +12,11 @@ cervello-doodle e il suo lampo.
 | `tokens.css` | Fonte di verità CSS: colori, tipografia, spazio, raggi, marchio, alias di tema. |
 | `tokens.js` | Gli stessi token in **JavaScript/TS** (`bsc`, `cssVar()`, `getTheme()`, `setTheme()`) — per grafici, canvas, stili dinamici. |
 | `theme.js` | **Switch del tema unificato** per tutte le app: `initTheme()`, `toggleTheme()` — default scuro, persistenza, auto-wire dei pulsanti. |
-| `ui.js` | **Comportamenti UI condivisi**: `initUI()` (tema + nav + dropdown + lingua + copertine), hamburger responsivo, dropdown/menu, switch lingua (`getLang()`/`setLang()`, evento `bsc:langchange`), **copertina con sinossi** (`initCovers()`). |
-| `components.css` | Componenti `.bsc-` (bottoni, badge, card, form, **select/switch/checkbox**, **stat block**, **tabella**, **tab**, alert, box informativo, link a pillola, skip-link, code block). |
+| `ui.js` | **Comportamenti UI condivisi**: `initUI()` (tema + nav + dropdown + lingua + copertine + **bottom sheet**), hamburger responsivo, dropdown/menu, switch lingua (`getLang()`/`setLang()`, evento `bsc:langchange`), **copertina con sinossi** (`initCovers()`), **bottom sheet** (`initSheets()`/`openSheet()`/`closeSheet()`), **toast** (`bscToast()`). |
+| `components.css` | Componenti `.bsc-` (bottoni, badge, card, form, **select/switch/checkbox**, **selettore segmentato**, **stat block**, **tabella**, **tab**, **bottom sheet**, **toast**, alert, box informativo, link a pillola, skip-link, code block). |
 | `index.html` | Living style guide navigabile — la vetrina + la sezione **Sviluppo** con snippet copiabili (GitHub Pages / Artifact). |
-| `assets/favicon.png` | Favicon: cervello bianco su carbone, angoli arrotondati. |
+| `assets/favicon.svg` | Favicon **vettoriale** (cervello): scalabile e nitido — da preferire, PNG come fallback. |
+| `assets/favicon.png` | Favicon PNG: cervello bianco su carbone, angoli arrotondati (fallback per browser datati). |
 | `assets/brain-mark.png` | Marchio compatto come **maschera** (alfa) — si ricolora con `currentColor`. |
 
 ## Uso rapido
@@ -25,8 +26,9 @@ cervello-doodle e il suo lampo.
   <!-- 1. web font (produzione) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-  <!-- 2. favicon -->
-  <link rel="icon" type="image/png" href="design-system/assets/favicon.png">
+  <!-- 2. favicon (SVG scalabile, PNG di fallback) -->
+  <link rel="icon" type="image/svg+xml" href="design-system/assets/favicon.svg">
+  <link rel="icon" type="image/png"     href="design-system/assets/favicon.png">
   <!-- 3. design system -->
   <link rel="stylesheet" href="design-system/tokens.css">
   <link rel="stylesheet" href="design-system/components.css">

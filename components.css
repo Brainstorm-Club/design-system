@@ -461,3 +461,113 @@
 .bsc-cover:focus-within .bsc-cover__synopsis,
 .bsc-cover.is-syn .bsc-cover__synopsis { opacity: 1; pointer-events: auto; }
 @media (prefers-reduced-motion: reduce) { .bsc-cover__synopsis { transition: none; } }
+
+/* ==========================================================================
+   Selettore segmentato (choice-chips) — scelta da un set discreto
+   --------------------------------------------------------------------------
+   Gruppo di bottoni-opzione (difficoltà, grado, livello…). Lo stato attivo usa
+   aria-pressed="true" (toggle button, accessibile) oppure la classe .is-selected.
+   Un solo accento: il rosso di marca (bordo + tinta). Target tap >= 44px.
+   Nato nel tracker XP (crit-xp-sheet), generalizzato per i character builder.
+   Markup:
+     <div class="bsc-optgroup" role="group" aria-label="Difficoltà">
+       <button class="bsc-opt" type="button" aria-pressed="true">Medio</button>
+       <button class="bsc-opt" type="button">Difficile</button>
+     </div>
+   A griglia (N colonne): .bsc-optgroup--grid con --bsc-opt-cols
+     <div class="bsc-optgroup bsc-optgroup--grid" style="--bsc-opt-cols:3"> … </div>
+   ========================================================================== */
+.bsc-optgroup { display: flex; flex-wrap: wrap; gap: var(--bsc-space-1); }
+.bsc-optgroup--grid { display: grid; grid-template-columns: repeat(var(--bsc-opt-cols, 3), 1fr); }
+.bsc-opt {
+  min-height: 44px; padding: var(--bsc-space-2) var(--bsc-space-3);
+  background: var(--bsc-surface); color: var(--bsc-text-muted);
+  border: 2px solid var(--bsc-border); border-radius: var(--bsc-radius-sm);
+  font-family: var(--bsc-font-body); font-size: var(--bsc-text-sm); font-weight: 600;
+  line-height: 1.2; text-align: center; cursor: pointer;
+  transition: background var(--bsc-dur-fast) var(--bsc-ease),
+              color var(--bsc-dur-fast) var(--bsc-ease),
+              border-color var(--bsc-dur-fast) var(--bsc-ease);
+}
+.bsc-opt:hover { color: var(--bsc-text); border-color: var(--bsc-text-muted); }
+.bsc-opt:focus-visible { outline: 2px solid var(--bsc-focus); outline-offset: 2px; }
+.bsc-opt[aria-pressed="true"], .bsc-opt.is-selected {
+  background: color-mix(in srgb, var(--bsc-primary) 18%, var(--bsc-surface));
+  border-color: var(--bsc-primary); color: var(--bsc-text); font-weight: 700;
+}
+.bsc-opt:disabled { opacity: .4; cursor: not-allowed; }
+@media (prefers-reduced-motion: reduce) { .bsc-opt { transition: none; } }
+
+/* ==========================================================================
+   Bottom sheet / dialog modale — mobile-first (slide-up), desktop centrato
+   --------------------------------------------------------------------------
+   Overlay a tutto schermo + pannello. Su schermi larghi il pannello si centra
+   e si arrotonda invece di salire "a tendina". Chiusura: click sul backdrop,
+   tasto Esc, o un elemento [data-bsc-sheet-close] (auto-wire: initSheets()).
+   Apri con initSheets()+data-attr, o gestisci [hidden] dall'app (Vue/Alpine).
+   Markup:
+     <button type="button" data-bsc-sheet-open="sheet-log">Apri</button>
+     <div class="bsc-sheet-backdrop" id="sheet-log" data-bsc-sheet hidden>
+       <div class="bsc-sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-log-t">
+         <header class="bsc-sheet__head">
+           <h2 class="bsc-sheet__title" id="sheet-log-t">Titolo</h2>
+           <button class="bsc-sheet__close" type="button" data-bsc-sheet-close aria-label="Chiudi">&#10005;</button>
+         </header>
+         … contenuto …
+       </div>
+     </div>
+   ========================================================================== */
+.bsc-sheet-backdrop {
+  position: fixed; inset: 0; z-index: 200; display: flex;
+  align-items: flex-end; justify-content: center;
+  background: color-mix(in srgb, var(--bsc-carbone) 55%, transparent);
+}
+.bsc-sheet-backdrop[hidden] { display: none; }
+.bsc-sheet {
+  width: 100%; max-width: 32rem; max-height: 88vh; overflow-y: auto;
+  background: var(--bsc-bg); color: var(--bsc-text);
+  border-top: 3px solid var(--bsc-text);
+  padding: var(--bsc-space-4) var(--bsc-space-4) var(--bsc-space-6);
+  animation: bsc-sheet-up var(--bsc-dur-base) var(--bsc-ease);
+}
+@keyframes bsc-sheet-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes bsc-sheet-pop { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.bsc-sheet__head {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--bsc-space-3);
+  margin-bottom: var(--bsc-space-3); padding-bottom: var(--bsc-space-2);
+  border-bottom: 2px solid var(--bsc-text);
+}
+.bsc-sheet__title { font-family: var(--bsc-font-display); font-size: var(--bsc-text-lg); font-weight: 700; letter-spacing: -.01em; margin: 0; }
+.bsc-sheet__close {
+  flex: 0 0 auto; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+  background: transparent; border: 2px solid var(--bsc-text); color: var(--bsc-text);
+  font-size: 1rem; line-height: 1; cursor: pointer; border-radius: var(--bsc-radius-sm);
+  transition: background var(--bsc-dur-fast) var(--bsc-ease), color var(--bsc-dur-fast) var(--bsc-ease);
+}
+.bsc-sheet__close:hover { background: var(--bsc-text); color: var(--bsc-bg); }
+.bsc-sheet__close:focus-visible { outline: 2px solid var(--bsc-focus); outline-offset: 2px; }
+@media (min-width: 640px) {
+  .bsc-sheet-backdrop { align-items: center; padding: var(--bsc-space-4); }
+  .bsc-sheet { border: 2px solid var(--bsc-text); border-radius: var(--bsc-radius-lg); max-height: 90vh; animation-name: bsc-sheet-pop; }
+}
+@media (prefers-reduced-motion: reduce) { .bsc-sheet { animation: none; } }
+
+/* ==========================================================================
+   Toast — notifica transitoria (bottom-center, pill)
+   --------------------------------------------------------------------------
+   Mostra con la classe .is-show, oppure usa il helper bscToast(msg) (ui.js),
+   che crea/riusa un unico live region ARIA. Non usare per errori bloccanti.
+   Markup (statico): <div class="bsc-toast" role="status" aria-live="polite"></div>
+   ========================================================================== */
+.bsc-toast {
+  position: fixed; left: 50%; bottom: var(--bsc-space-6); z-index: 300;
+  transform: translateX(-50%) translateY(12px);
+  background: var(--bsc-text); color: var(--bsc-bg);
+  font-family: var(--bsc-font-body); font-size: var(--bsc-text-sm); font-weight: 700;
+  padding: var(--bsc-space-2) var(--bsc-space-5); border-radius: var(--bsc-radius-pill);
+  box-shadow: var(--bsc-shadow-md); max-width: calc(100vw - 2 * var(--bsc-space-4));
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--bsc-dur-fast) var(--bsc-ease), transform var(--bsc-dur-fast) var(--bsc-ease);
+}
+.bsc-toast.is-show { opacity: 1; transform: translateX(-50%) translateY(0); }
+@media (prefers-reduced-motion: reduce) { .bsc-toast { transition: opacity var(--bsc-dur-fast) linear; } }
