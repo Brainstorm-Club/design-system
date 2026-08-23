@@ -128,6 +128,17 @@ Markup completo e demo interattiva nella sezione **Sviluppo** della style guide.
   e `--done` ("concluso"), indicatore `.bsc-live` (puntino che pulsa), `.bsc-card--soon`
   ("in arrivo"), `.bsc-sysbox` (box informativo con accento) + `.bsc-pill` / `.bsc-pill--tool`
   (link a pillola, la ★ marca gli strumenti della community), `.bsc-skip` (salta-al-contenuto).
+- **Bottoni semantici.** Quando il colore del bottone *dice* che cosa fa — verde salva,
+  oro esporta, azzurro condivide, rosso cancella — usa `.bsc-btn--successo`,
+  `--attenzione`, `--info`, `--errore`. I quattro colori erano già in `tokens.css` ma
+  nessun componente li consumava, e ogni app se li ricablava a mano sbagliando il primo
+  piano: quello giusto cambia da colore a colore (carbone su verde e oro, bianco su
+  azzurro e rosso). Se le etichette non devono andare in minuscolo, aggiungi
+  `.bsc-btn--testo-fedele`.
+- **Scheda a filo sottile.** `.bsc-card--filo` è `.bsc-card` con bordo di un pixel, raggio
+  medio e respiro ridotto: serve dove le schede sono tante e vicine (elenchi, riepiloghi,
+  griglie di dati) e i 2px della scheda piena fanno gabbia. Consuma
+  `--bsc-border-hairline`, dichiarato da sempre e prima inutilizzato.
 
 ## Palette
 

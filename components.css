@@ -61,6 +61,47 @@
 
 .bsc-btn--sm { padding: var(--bsc-space-1) var(--bsc-space-3); font-size: var(--bsc-text-sm); }
 
+/* Varianti semantiche: il colore dice che cosa fa il bottone, non solo che è
+   un bottone. I quattro colori esistevano già in tokens.css ma nessun
+   componente li consumava, e ogni app se li ricablava a mano — sbagliando il
+   contrasto, perché presi tal quali verde e azzurro NON passano il 4,5:1 con
+   nessuno dei due primi piani del brand (verde 4,49 su carbone e 4,01 su
+   bianco; azzurro 4,15 e 4,68). Qui il fondo viene scurito quel tanto che
+   basta con color-mix e il primo piano è scelto per colore: a riposo
+   4,83 / 7,18 / 5,49 / 4,90, col mouse sopra 5,85 / 5,82 / 6,52 / 6,08.
+   Se si toccano questi valori vanno ricontrollati i rapporti, non a occhio. */
+.bsc-btn--successo {
+  --_bg: color-mix(in srgb, var(--bsc-successo) 80%, var(--bsc-carbone));
+  --_fg: var(--bsc-bianco);
+  --_bg-hover: color-mix(in srgb, var(--bsc-successo) 68%, var(--bsc-carbone));
+}
+.bsc-btn--attenzione {
+  --_bg: var(--bsc-attenzione);
+  --_fg: var(--bsc-carbone);
+  --_bg-hover: color-mix(in srgb, var(--bsc-attenzione) 88%, var(--bsc-carbone));
+}
+.bsc-btn--info {
+  --_bg: color-mix(in srgb, var(--bsc-info) 80%, var(--bsc-carbone));
+  --_fg: var(--bsc-bianco);
+  --_bg-hover: color-mix(in srgb, var(--bsc-info) 68%, var(--bsc-carbone));
+}
+.bsc-btn--errore {
+  --_bg: var(--bsc-errore);
+  --_fg: var(--bsc-bianco);
+  --_bg-hover: color-mix(in srgb, var(--bsc-errore) 84%, var(--bsc-carbone));
+}
+.bsc-btn--successo:hover,
+.bsc-btn--attenzione:hover,
+.bsc-btn--info:hover,
+.bsc-btn--errore:hover {
+  background: var(--_bg-hover);
+  border-color: var(--_bg-hover);
+}
+
+/* Il minuscolo forzato di .bsc-btn è una scelta di marchio, non un vincolo
+   tecnico: chi ha etichette che devono restare come sono scritte usa questa. */
+.bsc-btn--testo-fedele { text-transform: none; }
+
 /* --- Badge / categoria gioco ------------------------------------------ */
 .bsc-badge {
   display: inline-flex; align-items: center; gap: var(--bsc-space-1);
@@ -83,6 +124,15 @@
 }
 .bsc-card--sketch { border-color: var(--bsc-text); border-radius: var(--bsc-radius-sketch); }
 .bsc-card--pop { box-shadow: var(--bsc-shadow-pop); border-color: var(--bsc-text); border-radius: var(--bsc-radius-md); }
+/* Scheda a filo sottile: bordo di un pixel, raggio e respiro ridotti. Serve
+   dove le schede sono tante e vicine — elenchi, riepiloghi, griglie di dati —
+   e i 2px di .bsc-card fanno una gabbia. Consuma --bsc-border-hairline, che
+   tokens.css dichiarava da sempre senza che nessun componente lo usasse. */
+.bsc-card--filo {
+  border: var(--bsc-border-hairline);
+  border-radius: var(--bsc-radius-md);
+  padding: var(--bsc-space-4);
+}
 
 /* --- Form ------------------------------------------------------------- */
 .bsc-input {
