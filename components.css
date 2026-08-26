@@ -649,11 +649,6 @@
    stato in più.
    ========================================================================== */
 
-PONTEGGIO — da rimuovere quando il lotto DS avrà portato .bsc-tabbar nel
-   design system. Qui c'è il minimo perché la fase 0 non sia visibilmente
-   rotta: barra in basso, safe-area rispettata, niente scorrimento orizzontale
-   del corpo. Solo token, nessun valore inventato.
-   ────────────────────────────────────────────────────────────────────────── */
 .bsc-tabbar {
   position: fixed;
   inset-inline: 0;
