@@ -628,3 +628,474 @@
 }
 .bsc-toast.is-show { opacity: 1; transform: translateX(-50%) translateY(0); }
 @media (prefers-reduced-motion: reduce) { .bsc-toast { transition: opacity var(--bsc-dur-fast) linear; } }
+
+
+/* ==========================================================================
+   COMPONENTI PER LE APP
+   ==========================================================================
+   Il sito è fatto di pagine che si leggono; un'app del club è fatta di
+   schermate che si toccano, e ha bisogno di pezzi che una pagina non ha: una
+   barra da pollice, un foglio che sale dal basso, righe chiave/valore, un
+   tastierino, contatori a pallini, dadi.
+
+   Sono nati dentro il Character Companion e ci sono rimasti mesi, marcati
+   «ponteggio», in attesa di salire qui. Stanno qui adesso perché la seconda
+   app che li riscrive a mano li riscrive diversi — e perché il contratto fra
+   un'app e il design system è il nome della classe, non la sua
+   implementazione.
+
+   Nessuna regola di questa sezione ridefinisce un componente del sito: dove un
+   nome esiste già (`.bsc-tabs`, `.bsc-pill`) qui c'è solo una variante o uno
+   stato in più.
+   ========================================================================== */
+
+PONTEGGIO — da rimuovere quando il lotto DS avrà portato .bsc-tabbar nel
+   design system. Qui c'è il minimo perché la fase 0 non sia visibilmente
+   rotta: barra in basso, safe-area rispettata, niente scorrimento orizzontale
+   del corpo. Solo token, nessun valore inventato.
+   ────────────────────────────────────────────────────────────────────────── */
+.bsc-tabbar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: var(--bsc-z-tabbar);
+  display: flex;
+  gap: var(--bsc-space-1);
+  /* Anche le voci della barra stanno fuori dalla zona che il sistema si è
+     prenotato per il gesto «indietro». */
+  padding: var(--bsc-space-2) 0;
+  padding-inline-start: var(--bsc-margine-i);
+  padding-inline-end: var(--bsc-margine-f);
+  padding-bottom: calc(var(--bsc-space-2) + env(safe-area-inset-bottom, 0px));
+  background: color-mix(in srgb, var(--bsc-bg) 92%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid var(--bsc-border);
+}
+
+.bsc-tabbar a {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: var(--bsc-tap-min);
+  /* Le etichette sono corte, ma cinque in 375 px non concedono margini: il
+     respiro orizzontale lo dà la barra, non la singola voce. */
+  padding-inline: var(--bsc-space-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--bsc-font-mono);
+  font-size: var(--bsc-text-xs);
+  color: var(--bsc-text-muted);
+  text-decoration: none;
+  border: 0;
+  border-radius: var(--bsc-radius-sm);
+  touch-action: manipulation;
+}
+
+.bsc-tabbar a[aria-current] { color: var(--bsc-text); background: var(--bsc-surface); }
+.bsc-tabbar a:focus-visible { outline: 2px solid var(--bsc-focus); outline-offset: -2px; }
+
+
+/* --- Varianti «app» dei componenti del sito: safe-area ------------------- */
+.bsc-safe-t { padding-top: env(safe-area-inset-top, 0px); }
+.bsc-safe-b { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+.bsc-appbar--app { padding-top: env(safe-area-inset-top, 0px); }
+.bsc-appbar--app .bsc-appbar__inner {
+  padding-inline-start: var(--bsc-margine-i);
+  padding-inline-end: var(--bsc-margine-f);
+}
+
+/* Nel sito il toggle del tema si clicca col mouse; qui si tocca col pollice. */
+.bsc-appbar--app .bsc-theme-toggle {
+  min-inline-size: var(--bsc-tap-min);
+  min-block-size: var(--bsc-tap-min);
+  touch-action: manipulation;
+}
+
+/* Il toast del DS sta a 2 rem dal fondo: lì c'è la tab bar. */
+.bsc-toast--app { bottom: calc(var(--bsc-tabbar-h) + var(--bsc-space-3) + env(safe-area-inset-bottom, 0px)); }
+
+.bsc-sheet--app {
+  padding-bottom: calc(var(--bsc-space-4) + env(safe-area-inset-bottom, 0px));
+  z-index: var(--bsc-z-sheet);
+}
+
+/* --- .bsc-pager — lo swipe fra le sezioni, in CSS ------------------------
+   Non è codice mio: è scroll-snap. Il browser ci mette inerzia, accessibilità
+   e — la parte che conta — la precedenza col gesto di sistema. Dito dal bordo:
+   vince il sistema. Dito dentro il contenuto: vince lo scorrimento.
+   `overscroll-behavior-x: contain` impedisce che, arrivati in fondo, la spinta
+   passi al browser e diventi un «indietro». */
+.bsc-pager {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  gap: 0;                          /* pagine adiacenti: uno swipe = una sezione */
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.bsc-pager::-webkit-scrollbar { display: none; }
+
+.bsc-pager > *, .bsc-pager__page {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-width: 0;
+  padding-block-end: var(--bsc-space-4);
+}
+
+/* La barra delle sezioni della scheda: sei etichette non stanno in una riga da
+   375 px. Va a capo invece di scorrere — scorrendo, l'ultima sezione si
+   raggiungerebbe solo con un gesto, e le etichette ai bordi finirebbero nella
+   zona che il sistema si è prenotato. A capo non succede né l'uno né l'altro. */
+.bsc-tabs[data-sezioni] {
+  display: grid;
+  /* Tre e tre, non «quante ce ne stanno»: sei etichette spezzate in 5 + 1 si
+     leggono peggio di due righe pari. Diventano sei in fila solo quando c'è
+     davvero lo spazio — e a deciderlo è la colonna che le contiene, non il
+     viewport, perché sul tablet la scheda vive nella colonna centrale. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--bsc-space-1);
+  padding-bottom: var(--bsc-space-1);
+}
+
+@container vista (min-width: 34rem) {
+  .bsc-tabs[data-sezioni] { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+
+.bsc-tabs[data-sezioni] .bsc-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+/* L'indicatore: dove sono, e quante ne restano. Tappabile, perché nessuna
+   funzione deve dipendere da un gesto (WCAG 2.5.1). */
+.bsc-pager__punti {
+  display: flex;
+  justify-content: center;
+  gap: var(--bsc-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bsc-pager__punto {
+  inline-size: var(--bsc-tap-min);
+  block-size: var(--bsc-tap-min);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.bsc-pager__punto::before {
+  content: '';
+  inline-size: var(--bsc-space-2);
+  block-size: var(--bsc-space-2);
+  border-radius: var(--bsc-radius-pill);
+  background: var(--bsc-border);
+}
+
+.bsc-pager__punto[aria-current]::before { background: var(--bsc-primary); }
+
+/* --- .bsc-kv — riga chiave/valore, il pane e burro della scheda ---------- */
+.bsc-kv {
+  display: flex;
+  align-items: center;
+  gap: var(--bsc-space-3);
+  width: 100%;
+  min-height: var(--bsc-tap-min);
+  padding: var(--bsc-space-2) 0;
+  text-align: start;
+  background: none;
+  color: inherit;
+  border: 0;
+  border-bottom: 1px solid var(--bsc-border);
+}
+
+button.bsc-kv, a.bsc-kv { cursor: pointer; text-decoration: none; touch-action: manipulation; }
+button.bsc-kv:focus-visible, a.bsc-kv:focus-visible { outline: 3px solid var(--bsc-focus); outline-offset: -2px; }
+
+.bsc-kv__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--bsc-font-body);
+  font-size: var(--bsc-text-sm);
+  color: var(--bsc-text-muted);
+}
+
+.bsc-kv__value {
+  flex: 0 0 auto;
+  font-family: var(--bsc-font-mono);
+  font-size: var(--bsc-text-lg);
+  font-variant-numeric: tabular-nums;
+  color: var(--bsc-text);
+}
+
+.bsc-kv__hint {
+  flex: 0 0 auto;
+  font-family: var(--bsc-font-mono);
+  font-size: var(--bsc-text-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--bsc-tracking-label);
+  color: var(--bsc-text-faint);
+}
+
+/* La riga che tira: si vede che è tappabile senza doverla toccare. */
+.bsc-kv--azione .bsc-kv__value { color: var(--bsc-primary); }
+.bsc-kv--azione:active { background: var(--bsc-surface); }
+
+/* --- .bsc-meter — PF e avanzamento PX, con i suoi tre stati --------------
+   Non è una barra sottile con l'etichetta accanto: etichetta e valore stanno
+   *dentro*, e il riempimento passa dietro. Sono i punti ferita — al tavolo si
+   guardano più di ogni altra cosa, e devono leggersi in un colpo d'occhio. */
+.bsc-meter {
+  position: relative;
+  isolation: isolate;              /* così il riempimento sta dietro al testo, non sotto lo sfondo */
+  display: flex;
+  align-items: center;
+  gap: var(--bsc-space-3);
+  min-height: var(--bsc-tap-min);
+  padding: var(--bsc-space-2) var(--bsc-space-3);
+  background: var(--bsc-surface-2);
+  border-radius: var(--bsc-radius-md);
+  overflow: hidden;
+}
+
+/* `--bsc-meter-quota` è una frazione fra 0 e 1 (è così che la scrive la vista
+   scheda), non una percentuale. Il colore la segue con continuità: verde a
+   pieni punti ferita, rosso quando ne restano pochi — senza che chi disegna la
+   riga debba scegliere una soglia. Le classi `--ferito` e `--critico` restano
+   per chi una soglia ce l'ha davvero. */
+.bsc-meter__fill {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  z-index: -1;
+  inline-size: calc(var(--bsc-meter-quota, 1) * 100%);
+  background: color-mix(in oklab, var(--bsc-successo) calc(var(--bsc-meter-quota, 1) * 100%), var(--bsc-errore));
+  opacity: 0.38;
+  transition: inline-size var(--bsc-dur-base) var(--bsc-ease);
+}
+
+.bsc-meter__label {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--bsc-font-body);
+  font-size: var(--bsc-text-sm);
+  color: var(--bsc-text-muted);
+}
+
+.bsc-meter__value {
+  flex: 0 0 auto;
+  font-family: var(--bsc-font-mono);
+  font-size: var(--bsc-text-lg);
+  font-variant-numeric: tabular-nums;
+  color: var(--bsc-text);
+}
+
+.bsc-meter--ferito  .bsc-meter__fill { background: var(--bsc-attenzione); }
+.bsc-meter--critico .bsc-meter__fill { background: var(--bsc-errore); }
+
+/* --- .bsc-pips — usati/liberi, il componente più usato dell'app ----------
+   Il pallino è piccolo perché gli slot sono tanti; il bersaglio è grande
+   perché il dito è uno solo. Sono due misure diverse, e va bene così. */
+.bsc-pips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Il pallino da leggere (uno `span`: la riga intera è il bersaglio). */
+.bsc-pips__pip {
+  flex: 0 0 auto;
+  inline-size: var(--bsc-space-4);
+  block-size: var(--bsc-space-4);
+  margin-inline-end: var(--bsc-space-1);
+  border: 2px solid var(--bsc-border);
+  border-radius: var(--bsc-radius-pill);
+  background: var(--bsc-surface);
+}
+
+.bsc-pips__pip.is-used { background: var(--bsc-primary); border-color: var(--bsc-primary); }
+
+/* Il pallino da toccare: bersaglio pieno, pallino piccolo. Sono due misure
+   diverse — gli slot sono tanti, il dito è uno solo — e va bene così. */
+.bsc-pips button {
+  inline-size: var(--bsc-tap-min);
+  block-size: var(--bsc-tap-min);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.bsc-pips button::before {
+  content: '';
+  inline-size: var(--bsc-space-5);
+  block-size: var(--bsc-space-5);
+  border: 2px solid var(--bsc-border);
+  border-radius: var(--bsc-radius-pill);
+  background: var(--bsc-surface);
+  transition: background var(--bsc-dur-fast) var(--bsc-ease);
+}
+
+.bsc-pips button[aria-pressed="true"]::before {
+  background: var(--bsc-primary);
+  border-color: var(--bsc-primary);
+}
+
+.bsc-pips button:focus-visible { outline: 3px solid var(--bsc-focus); outline-offset: -4px; border-radius: var(--bsc-radius-sm); }
+
+/* --- .bsc-chip — condizioni attive, filtri del compendio -----------------
+   Le viste a volte combinano `.bsc-chip` con `.bsc-btn`: la parte decorativa
+   sta dietro un `:not(.bsc-btn)` per non scavalcare il bottone del design
+   system. La forma e il bersaglio invece valgono sempre. */
+.bsc-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--bsc-space-2);
+  min-height: var(--bsc-tap-min);
+  padding-inline: var(--bsc-space-4);
+  font-family: var(--bsc-font-mono);
+  font-size: var(--bsc-text-sm);
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.bsc-chip:not(.bsc-btn) {
+  background: var(--bsc-surface);
+  color: var(--bsc-text-muted);
+  border: 1px solid var(--bsc-border);
+  border-radius: var(--bsc-radius-pill);
+}
+
+.bsc-chip--on, .bsc-chip[aria-pressed="true"] {
+  background: var(--bsc-primary);
+  color: var(--bsc-on-primary);
+  border-color: var(--bsc-primary);
+}
+
+.bsc-chip:focus-visible { outline: 3px solid var(--bsc-focus); outline-offset: 2px; }
+
+/* --- .bsc-die e .bsc-roll — specifici dei GDR, ma il club fa solo quelli -- */
+.bsc-die {
+  display: inline-grid;
+  place-items: center;
+  min-inline-size: var(--bsc-tap-min);
+  min-block-size: var(--bsc-tap-min);
+  font-family: var(--bsc-font-display);
+  font-size: var(--bsc-text-base);
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.bsc-die:not(.bsc-btn) {
+  background: var(--bsc-surface);
+  color: var(--bsc-text);
+  border: 2px solid var(--bsc-border);
+  border-radius: var(--bsc-radius-md);
+}
+
+.bsc-die[aria-pressed="true"], .bsc-die.is-active { border-color: var(--bsc-primary); }
+.bsc-die:focus-visible { outline: 3px solid var(--bsc-focus); outline-offset: 2px; }
+
+.bsc-roll {
+  display: grid;
+  gap: var(--bsc-space-2);
+  padding: var(--bsc-space-4);
+  background: var(--bsc-surface);
+  border: 1px solid var(--bsc-border);
+  border-radius: var(--bsc-radius-lg);
+}
+
+.bsc-roll .bsc-display { font-variant-numeric: tabular-nums; margin: 0; }
+
+/* Gli scartati si mostrano, non si nascondono: al tavolo il dado scartato si
+   vede sul feltro. */
+.bsc-pill.is-scartato { color: var(--bsc-text-faint); text-decoration: line-through; }
+
+/* --- .bsc-numpad — cifre grandi, si digita al buio ----------------------- */
+.bsc-numpad {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(var(--bsc-tap-min), 1fr));
+  gap: var(--bsc-space-2);
+}
+
+.bsc-numpad button {
+  min-block-size: var(--bsc-space-7);
+  min-inline-size: var(--bsc-tap-min);
+  background: var(--bsc-surface);
+  color: var(--bsc-text);
+  border: 1px solid var(--bsc-border);
+  border-radius: var(--bsc-radius-md);
+  font-family: var(--bsc-font-display);
+  font-size: var(--bsc-text-xl);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.bsc-numpad button:focus-visible { outline: 3px solid var(--bsc-focus); outline-offset: -2px; }
+
+/* --- .bsc-stepper — monete, PX rapidi, contatori ------------------------- */
+.bsc-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bsc-space-1);
+}
+
+.bsc-stepper button {
+  inline-size: var(--bsc-tap-min);
+  block-size: var(--bsc-tap-min);
+  display: grid;
+  place-items: center;
+  background: var(--bsc-surface);
+  color: var(--bsc-text);
+  border: 1px solid var(--bsc-border);
+  border-radius: var(--bsc-radius-md);
+  font-family: var(--bsc-font-display);
+  font-size: var(--bsc-text-lg);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.bsc-stepper button:focus-visible { outline: 3px solid var(--bsc-focus); outline-offset: -2px; }
+
+.bsc-stepper__v {
+  min-inline-size: var(--bsc-space-7);
+  text-align: center;
+  font-family: var(--bsc-font-mono);
+  font-size: var(--bsc-text-lg);
+  font-variant-numeric: tabular-nums;
+}

@@ -22,6 +22,7 @@
   --bsc-rosso-700:    #9E2820;
   --bsc-rosso-600:    #C2332B; /* base */
   --bsc-rosso-400:    #D9584E;
+  --bsc-rosso-300:    #E06B62; /* accento conforme AA sul tema carbone */
   --bsc-rosso-200:    #EB9B95;
 
   /* Neutri caldi (virati verso il rosso, non grigi puri) */
@@ -123,6 +124,21 @@
   --bsc-container:   72rem; /* 1152px */
   --bsc-measure:     65ch;  /* larghezza di lettura ideale */
 
+  /* --- Guscio applicativo ----------------------------------------------
+     Misure che valgono per ogni PWA del club, non per il sito: la dimensione
+     minima di un bersaglio da dito, la fascia lungo i bordi verticali che i
+     sistemi si prenotano per i propri gesti, e la pila degli z-index. Erano
+     nate dentro il Character Companion; stanno qui perché la seconda app che
+     le riscrive a mano le riscrive diverse. */
+  --bsc-tap-min:      44px;   /* WCAG 2.5.5: mai un bersaglio più piccolo */
+  --bsc-bordo-morto:  24px;   /* iOS e Android ci leggono «indietro» e «home» */
+  --bsc-margine-i:    max(var(--bsc-bordo-morto), env(safe-area-inset-left, 0px));
+  --bsc-margine-f:    max(var(--bsc-bordo-morto), env(safe-area-inset-right, 0px));
+  --bsc-tabbar-h:     calc(var(--bsc-tap-min) + var(--bsc-space-4));
+  --bsc-z-tabbar:     60;
+  --bsc-z-sheet:      200;
+  --bsc-z-toast:      300;
+
   /* --- Motion ---------------------------------------------------------- */
   --bsc-ease:      cubic-bezier(.2,.7,.3,1);
   --bsc-dur-fast:  150ms;
@@ -140,6 +156,14 @@
   --bsc-primary-hover: var(--bsc-rosso-400);
   --bsc-on-primary:    var(--bsc-bianco);
   --bsc-focus:         var(--bsc-rosso-400);
+
+  /* Il rosso quando fa da *testo*, non da fondo né da bordo.
+     `--bsc-rosso-400` regge sullo sfondo di pagina (4,68) ma scende a 3,89 su
+     `--bsc-surface-2`, sotto il 4,5 che la 1.4.3 chiede: su una scheda dentro
+     una scheda smette di essere leggibile. Questo sale a 4,59 nel caso
+     peggiore dei tre fondi. Il marchio resta `--bsc-rosso`: i logotipi sono
+     esentati, il testo no. */
+  --bsc-accento:       var(--bsc-rosso-300);
 }
 
 /* --- TEMA CARTA / chiaro ------------------------------------------------ */
@@ -155,6 +179,7 @@
   --bsc-primary-hover: var(--bsc-rosso-900);
   --bsc-on-primary:    var(--bsc-bianco);
   --bsc-focus:         var(--bsc-rosso-700);
+  --bsc-accento:       var(--bsc-rosso-700); /* 6,31 nel caso peggiore su carta */
   --bsc-grid-line:     rgba(24,22,23,.05); /* linee della griglia su carta */
   --bsc-border-ink:    2px solid var(--bsc-neutro-950);
   --bsc-shadow-sm: 0 1px 2px rgba(24,22,23,.12);
