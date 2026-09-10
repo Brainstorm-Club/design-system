@@ -811,8 +811,12 @@
 .bsc-pager__punto[aria-current]::before { background: var(--bsc-primary); }
 
 /* --- .bsc-kv — riga chiave/valore, il pane e burro della scheda ---------- */
+/* La riga va a capo invece di sfondare: con un'etichetta lunga e un valore
+   lungo insieme — succede nelle impostazioni — la riga sforava il viewport e
+   la pagina scorreva in orizzontale, che a 320 px la 1.4.10 vieta. */
 .bsc-kv {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--bsc-space-3);
   width: 100%;
@@ -837,7 +841,8 @@ button.bsc-kv:focus-visible, a.bsc-kv:focus-visible { outline: 3px solid var(--b
 }
 
 .bsc-kv__value {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  min-width: 0;
   font-family: var(--bsc-font-mono);
   font-size: var(--bsc-text-lg);
   font-variant-numeric: tabular-nums;
@@ -845,7 +850,8 @@ button.bsc-kv:focus-visible, a.bsc-kv:focus-visible { outline: 3px solid var(--b
 }
 
 .bsc-kv__hint {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  min-width: 0;
   font-family: var(--bsc-font-mono);
   font-size: var(--bsc-text-xs);
   text-transform: uppercase;
